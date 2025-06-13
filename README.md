@@ -8,15 +8,18 @@ Atualmente os códigos provenientes de TCCs ou artigos não são de fácil acess
 - A
 - B
 - C
+
 **Back-End:**
 - Júlio C. Oliveira
 - B
 - C
 - D
+
 **Banco de Dados:**
 - A
 - B
 - C
+
 **Teste:**
 - A
 
