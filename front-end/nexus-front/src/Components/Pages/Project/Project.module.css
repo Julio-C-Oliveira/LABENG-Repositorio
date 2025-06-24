@@ -1,0 +1,261 @@
+.container{
+  min-height: 100vh;
+  margin-top: 7rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-image: url(/imgs/project-image-1.png);
+  background-size: contain;
+  background-position: top center;
+}
+
+.gradient{
+  width: 100%;
+  height: 23rem;
+  background-image: linear-gradient(#FFF2, var(--color-bg));
+}
+
+.project_section{
+  width: 100%;
+  background-color: var(--color-bg);
+  padding: 0 2rem 8rem;
+}
+
+.wrapper{
+  width: 100%;
+  max-width: 110rem;
+  margin: auto;
+  margin-top: -3rem;
+}
+
+.tags{
+  margin-bottom: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  list-style: none;
+}
+
+.tags li,
+.details_tags .tag{
+  background-color: var(--color-main-0);
+  color: var(--color-main-2);
+  font-size: var(--font-size-2x);
+  font-weight: 500;
+  padding: .5rem 1.5rem;
+  border-radius: 99rem;
+}
+
+.project_title{
+  margin-bottom: 1rem;
+  color: var(--color-black-3);
+  font-size: var(--font-size-9x);
+  font-weight: 600;
+}
+
+.project_description{
+  border-left: 3px solid var(--color-main-1);
+  margin-left: 1rem;
+  margin-bottom: 5rem;
+  padding-left: 2rem;
+  color: var(--color-black-3);
+  font-size: var(--font-size-3x);
+}
+
+.project_highlight{
+  border-radius: 2rem;
+  display: flex;
+  overflow: hidden;
+}
+
+.project_highlight iframe{
+  width: 100%;
+  aspect-ratio: 16/9;
+  border: 0;
+}
+
+.project_team{
+  margin-top: 3rem;
+  padding: 3rem 2rem;
+
+  display: flex;
+  justify-content: center;
+  gap: 5rem;
+}
+
+.team_wrapper{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .5rem;
+}
+
+.team_wrapper span{
+  color: var(--color-black-1);
+  font-size: var(--font-size-3x);
+  font-weight: 500;
+}
+
+.profile_img button{
+  background-color: transparent;
+  border: 0;
+  border-radius: 99rem;
+  display: flex;
+  cursor: pointer;
+}
+
+.profile_img img{
+  width: 7rem;
+  border-radius: 99rem;
+  border: 2px solid var(--color-bg);
+}
+
+.project_details{
+  margin-bottom: 4rem;
+  padding: 2rem 3rem;
+  border-radius: 2rem;
+  box-shadow: var(--box-shadow-2);
+  list-style: none;
+}
+
+.project_details .row{
+  padding: 1.5rem 0;
+  font-size: var(--font-size-3x);
+  display: flex;
+  justify-content: space-between;
+}
+
+.project_details .row:not(:last-child){
+  border-bottom: 2px solid var(--color-main-0);
+}
+
+.row .title{
+  color: var(--color-main-2);
+  font-weight: 500;
+}
+
+.row .value{
+  color: var(--color-black-3);
+}
+
+.row .value.finalizado{
+  color: var(--color-green-1);
+  font-weight: 600;
+}
+
+.project_details .row.row_tags{
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.details_tags{
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.project_links{
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(30rem, 1fr));
+  gap: 2rem;
+}
+
+.project_links a{
+  border-radius: 99rem;
+  padding: 1rem 3rem;
+  font-size: var(--font-size-3x);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .5rem;
+  text-decoration: none;
+}
+
+.project_links a svg{
+  font-size: 2.4rem;
+}
+
+.project_links a img{
+  width: 2.3rem;
+}
+
+.project_links a.codigo_fonte{
+  border: 1px solid var(--color-main-1);
+  background-color: var(--color-white);
+  color: var(--color-main-2);
+}
+
+.project_links a.github{
+  background-color: var(--color-black-3);
+  color: var(--color-white);
+}
+
+.project_links a.pdf_publicacao{
+  background-color: var(--color-main-2);
+  color: var(--color-white);
+}
+
+.back_bttn{
+  padding: .6rem 1.5rem;
+  background-color: var(--color-white);
+  border: 0;
+  border-radius: 99rem;
+  box-shadow: var(--box-shadow-2);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: fixed;
+  bottom: 2rem;
+  transform: translateX(100vw - 50%);
+  cursor: pointer;
+}
+
+.back_bttn svg{
+  color: var(--color-main-2);
+  font-size: 3.2rem;
+}
+
+.back_bttn span{
+  color: var(--color-main-2);
+  font-size: var(--font-size-4x);
+  font-weight: 600;
+}
+
+@media (min-width: 768px){
+  .gradient{
+    height: 40rem;
+  }
+
+  .project_title{
+    font-size: var(--font-size-12x);
+  }
+
+  .project_description{
+    font-size: var(--font-size-4x);
+  }
+
+  .project_details .row{
+    font-size: var(--font-size-4x);
+  }
+
+
+  .back_bttn{
+    padding: .6rem;
+    top: 50%;
+    left: 2rem;
+    bottom: unset;
+    transform: unset;
+  }
+
+  .back_bttn span{
+    display: none;
+  }
+}
+
+@media (min-width: 1440px){
+  .gradient{
+    height: 60rem;
+  }
+}

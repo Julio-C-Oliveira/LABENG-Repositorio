@@ -1,0 +1,69 @@
+*,*::after,*::before{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins_Font', sans-serif;
+}
+
+:root{
+  font-size: 62.5%;
+
+  /*=== Colors ===*/
+  --color-main-0: #E6F2FC;
+  --color-main-1: #99D3FF;
+  --color-main-2: #1D9CFE;
+
+  --color-black-0: #E0E0E0;
+  --color-black-1: #B9B9B9;
+  --color-black-2: #777777;
+  --color-black-3: #353535;
+  --color-black-4: #4C4C4C;
+
+  --color-white: #FFF;
+
+  --color-orange-0: #EC9C4B;
+  --color-orange-1: #FC6D26;
+
+  --color-red-0: #F17979;
+  --color-red-1: #EC4B4B;
+
+  --color-green-0: #79F193;
+  --color-green-1: #4BEC6E;
+
+  --color-bg: #FCFCFC;
+
+  /*=== Font-size ===*/
+  --font-size-0x: 1rem;
+  --font-size-1x: 1.2rem;
+  --font-size-2x: 1.3rem;
+  --font-size-3x: 1.4rem;
+  --font-size-4x: 1.5rem;
+  --font-size-5x: 1.6rem;
+  --font-size-6x: 1.7rem;
+  --font-size-7x: 1.8rem;
+  --font-size-8x: 1.9rem;
+  --font-size-9x: 2rem;
+  --font-size-10x: 2.2rem;
+  --font-size-11x: 2.4rem;
+  --font-size-12x: 2.6rem;
+  --font-size-13x: 2.8rem;
+
+
+  /*=== Box shadow ===*/
+  --box-shadow-1: 0 1px .7rem rgba(0, 0, 0, 0.05);
+  --box-shadow-2: 0 1px .8rem rgba(0, 0, 0, 0.13);
+}
+
+img{
+  width: 100%;
+}
+
+hr{
+  border: 0;
+}
+
+body{
+  width: 100%;
+  height: 100%;
+  font-size: 1.6rem;
+}
