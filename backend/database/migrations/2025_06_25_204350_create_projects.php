@@ -21,6 +21,11 @@ return new class extends Migration
             $table->enum('type', ProjectTypes::labels());
             $table->string('link')->nullable();
 
+            $table->foreignId('user_id')
+                ->constrained('users')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+
             $table->timestamps();
         });
     }
