@@ -1,0 +1,48 @@
+.container{
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.container .logo{
+  width: 7rem;
+  user-select: none;
+  pointer-events: none;
+}
+
+.container h1{
+  margin-bottom: 2rem;
+  color: var(--color-main-1);
+  font-size: var(--font-size-9x);
+  font-weight: 600;
+}
+
+.container a{
+  border: 0;
+  padding: .7rem 2rem;
+  background-color: var(--color-main-2);
+  border-radius: 99rem;
+  color: var(--color-white);
+  font-size: var(--font-size-4x);
+  font-weight: 500;
+  cursor: pointer;
+  text-decoration: none;
+  box-shadow: var(--box-shadow);
+}
+
+.bg_img{
+  width: calc(100% * 1);
+  position: absolute;
+  right: -15rem;
+  bottom: 0;
+  z-index: -1;
+  opacity: .07;
+  user-select: none;
+  pointer-events: none;
+}
