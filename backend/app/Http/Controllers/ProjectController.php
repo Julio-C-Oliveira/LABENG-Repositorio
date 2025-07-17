@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Services\ProjectService;
 use Illuminate\Http\Request;
+use App\Models\Project;
 
 class ProjectController extends Controller
 {
@@ -56,5 +57,22 @@ class ProjectController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    /**
+     * Realiza a busca de projetos
+     */
+    public function search(Request $request) {
+        $request->validate([
+            'query' => 'required|string|min:3', // Pra pesquisar somente se houverem pelo menos 3 caracteres inseridos.
+        ]);
+        
+        $query = $request->input('query');
+
+        $projects = Project::where('title', 'LIKE', "%{$query}%")
+                                    //->orWhere('description', 'LIKE', "%{$query}%")
+                                    ->get();
+
+        return response()->json($projects);
     }
 }
