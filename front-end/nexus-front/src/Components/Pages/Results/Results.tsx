@@ -26,7 +26,7 @@ export function Results() {
   const [searchText, setSearchText] = useState('');
 
   async function handleProject() {
-    navigate('/inicio/projeto');
+    navigate('/inicio/projeto'); // Aqui vai ser a parte de redirecionar pro projeto
   }
 
   async function handleSearch(text: string) {
