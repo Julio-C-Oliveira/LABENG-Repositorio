@@ -13,17 +13,14 @@ return new class extends Migration
     {
         Schema::create('project_user', function (Blueprint $table) {
             $table->id('project_user_id');
-            $table->foreignId('project_id')
-                  ->constrained('projects', 'project_id')
-                  ->cascadeOnDelete();
             $table->foreignId('user_id')
-                  ->constrained('users', 'user_id')
-                  ->cascadeOnDelete();
-            $table->string('role', 100)->nullable();
+                ->constrained('users', 'user_id')
+                ->onDelete('cascade');
+            $table->foreignId('project_id')
+                ->constrained('projects', 'project_id')
+                ->onDelete('cascade');
+            $table->string('role')->default('member');
             $table->timestamps();
-
-            // Pra não repetir o usuário
-            $table->unique(['project_id', 'user_id']);
         });
     }
 

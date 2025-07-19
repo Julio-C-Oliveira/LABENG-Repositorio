@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->string('avatar')->nullable();
-            $table->string('cellphone', 30)->nullable();
+            $table->string('cellphone')->nullable();
             $table->string('linkedin')->nullable();
             $table->string('github')->nullable();
             $table->rememberToken();

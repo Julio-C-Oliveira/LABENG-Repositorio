@@ -14,14 +14,12 @@ return new class extends Migration
         Schema::create('project_related', function (Blueprint $table) {
             $table->id('project_related_id');
             $table->foreignId('project_id')
-                  ->constrained('projects', 'project_id')
-                  ->cascadeOnDelete();
+                ->constrained('projects', 'project_id')
+                ->onDelete('cascade');
             $table->foreignId('related_id')
-                  ->constrained('related_fields', 'related_id')
-                  ->cascadeOnDelete();
+                ->constrained('related_fields', 'related_id')
+                ->onDelete('cascade');
             $table->timestamps();
-
-            $table->unique(['project_id', 'related_id']);
         });
     }
 
