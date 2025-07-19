@@ -44,14 +44,24 @@ class TestSearchSeeder extends Seeder
             ['title' => 'Desenvolvimento de API para Serviços de Saúde', 'type' => 'Article'],
         ];
 
-        foreach ($projects as $index => $proj) {
-            Project::create([
+        foreach ($projects as $proj) {
+            $project = Project::create([
                 'title'        => $proj['title'],
                 'slug'         => Str::slug($proj['title']).'-'.Str::random(4),
+                'description'  => fake()->paragraph(3),
                 'published_at' => Carbon::now()->subDays(rand(10, 500)),
                 'type'         => $proj['type'],
-                'link'         => null, // pode colocar links falsos se quiser
-                'user_id'      => $user->id,
+                'pdf_url'      => null,
+                'zip_url'      => null,
+            ]);
+
+            // Associa usuário ao projeto (via tabela pivot)
+            DB::table('project_user')->insert([
+                'project_id' => $project->project_id,
+                'user_id'    => $user->user_id,
+                'role'       => 'owner',
+                'created_at' => now(),
+                'updated_at' => now(),
             ]);
         }
     }
