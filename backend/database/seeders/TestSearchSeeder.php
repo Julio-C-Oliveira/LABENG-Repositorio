@@ -56,10 +56,8 @@ class TestSearchSeeder extends Seeder
             ]);
 
             // Associa usuário ao projeto (via tabela pivot)
-            DB::table('project_user')->insert([
-                'project_id' => $project->project_id,
-                'user_id'    => $user->user_id,
-                'role'       => 'owner',
+            $project->users()->attach($user->user_id, [
+                'role' => 'owner',
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
