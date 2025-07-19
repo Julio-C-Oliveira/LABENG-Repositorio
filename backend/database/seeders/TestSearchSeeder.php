@@ -10,7 +10,7 @@ use App\Models\User;
 use Illuminate\Support\Str;
 use Carbon\Carbon;
 
-
+use Illuminate\Support\Facades\DB;
 
 class TestSearchSeeder extends Seeder
 {
