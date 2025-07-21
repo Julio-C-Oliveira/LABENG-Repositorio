@@ -1,8 +1,6 @@
 import { useNavigate } from "react-router";
 import { useState } from "react";
-import { authenticate } from "@/app/lib/actions";
 import styles from "./Login.module.css";
-
 import { AtIcon, PasswordIcon, EyeIcon, UserIcon } from "@phosphor-icons/react";
 
 import googleIcon from "/imgs/google-icon.png";
@@ -19,6 +17,61 @@ export function Login() {
   const [changeForm, setChangeForm] = useState<boolean>(true);
   const [acceptedTerms, setAcceptedTerms] = useState<boolean>(false);
 
+  const [formdata, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+  const [validationErrors, setValidationErrors] = useState({});
+
+  const handleChange = (e) => {
+    setFormData({ ...formdata, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e) => {
+    if (changeForm) {
+      e.preventDefault();
+      try {
+        // const response = await axios.post("http://127.0.0.1:8000/api/register", formdata);
+        const response = await fetch("http://127.0.0.1:8000/api/register", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formdata),
+        });
+
+        const responseData = await response.json();
+        if (response.ok) {
+          setValidationErrors({});
+          Swal.fire({
+            icon: "success",
+            title: "Success",
+            text: responseData.message,
+          }).then(() => {
+            window.location.href = "/login";
+          });
+        } else {
+          setValidationErrors(responseData);
+          if (responseData) {
+            setValidationErrors(responseData);
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: responseData || "Registration failed.",
+            });
+          }
+        }
+      } catch (error) {
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "An error occurred during registration.",
+        });
+      }
+    }
+  };
   return (
     <div className={styles.container}>
       <section className={styles.illustration_wrapper}>
@@ -46,7 +99,7 @@ export function Login() {
       </section>
       <section className={styles.form_wrapper}>
         <hr />
-        <form className={styles.form} action={authenticate}>
+        <form className={styles.form} onSubmit={(e) => handleSubmit(e)}>
           <img
             className={styles.form_logo}
             src={logotipo}
@@ -70,22 +123,42 @@ export function Login() {
           {!changeForm && (
             <>
               <div className={styles.input}>
-                <input type="text" placeholder="Nome de usuário" required />
+                <input
+                  type="text"
+                  onChange={(e) => handleChange(e)}
+                  placeholder="Nome de usuário"
+                  required
+                />
                 <UserIcon />
               </div>
               <div className={styles.input}>
-                <input type="text" placeholder="Email institucional" required />
+                <input
+                  type="text"
+                  onChange={(e) => handleChange(e)}
+                  placeholder="Email institucional"
+                  required
+                />
                 <AtIcon />
               </div>
               <div className={styles.input}>
-                <input type="password" placeholder="Senha" required />
+                <input
+                  type="password"
+                  onChange={(e) => handleChange(e)}
+                  placeholder="Senha"
+                  required
+                />
                 <PasswordIcon />
                 <button type="button">
                   <EyeIcon />
                 </button>
               </div>
               <div className={styles.input}>
-                <input type="password" placeholder="Confirmar senha" required />
+                <input
+                  type="password"
+                  onChange={(e) => handleChange(e)}
+                  placeholder="Confirmar senha"
+                  required
+                />
                 <PasswordIcon />
                 <button type="button">
                   <EyeIcon />
