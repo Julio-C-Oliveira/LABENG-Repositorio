@@ -1,8 +1,9 @@
 import { useNavigate } from "react-router";
-import { useState } from "react";
+import { useState, type ChangeEvent } from "react";
+import axios, { AxiosError } from "axios";
 import styles from "./Login.module.css";
 import { AtIcon, PasswordIcon, EyeIcon, UserIcon } from "@phosphor-icons/react";
-
+import Swal from "sweetalert2";
 import googleIcon from "/imgs/google-icon.png";
 import brasaoUFPA from "/imgs/brasao-ufpa-personalizado.png";
 import logo from "/logo-nexus/nexus-logo-white.svg";
@@ -17,33 +18,87 @@ export function Login() {
   const [changeForm, setChangeForm] = useState<boolean>(true);
   const [acceptedTerms, setAcceptedTerms] = useState<boolean>(false);
 
-  const [formdata, setFormData] = useState({
+  const [formDataRegister, setFormDataRegister] = useState({
     name: "",
+    email: "",
+    password: "",
+  });
+
+  const [formDataLogin, setFormDataLogin] = useState({
     email: "",
     password: "",
   });
   const [validationErrors, setValidationErrors] = useState({});
 
-  const handleChange = (e) => {
-    setFormData({ ...formdata, [e.target.name]: e.target.value });
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (changeForm) {
+      console.log(e.target.name);
+      setFormDataLogin({
+        ...formDataLogin,
+        [e.target.name]: e.target.value,
+      });
+    } else {
+      setFormDataRegister({
+        ...formDataRegister,
+        [e.target!.name]: e.target!.value,
+      });
+    }
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
     if (changeForm) {
+      try {
+        e.preventDefault();
+        console.log(formDataLogin);
+        const response = await axios.post(
+          "http://127.0.0.1:8000/api/auth/login/",
+          formDataLogin,
+        );
+
+        const token = response.data.authorisation.token;
+
+        localStorage.setItem("token", token);
+
+        Swal.fire({
+          icon: "success",
+          title: "Login Successful",
+          text: "Welcome back!",
+        }).then(() => {
+          navigate("/inicio");
+        });
+      } catch (error: unknown) {
+        if (error instanceof AxiosError) {
+          if (error.response && error.response.status === 401) {
+            Swal.fire({
+              icon: "error",
+              title: "Login Failed",
+              text: "Invalid email or password. Please try again.",
+            });
+          } else {
+            const responseData = error.response!.data;
+            setValidationErrors(responseData);
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: (validationErrors as string) || "Registration failed.",
+            });
+          }
+        }
+      }
+    } else {
       e.preventDefault();
       try {
-        // const response = await axios.post("http://127.0.0.1:8000/api/register", formdata);
-        const response = await fetch("http://127.0.0.1:8000/api/register", {
+        const response = await fetch("http://127.0.0.1:8000/api/auth/signup/", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
           },
-          body: JSON.stringify(formdata),
+          body: JSON.stringify(formDataRegister),
         });
 
         const responseData = await response.json();
         if (response.ok) {
-          setValidationErrors({});
+          setValidationErrors("");
           Swal.fire({
             icon: "success",
             title: "Success",
@@ -53,23 +108,21 @@ export function Login() {
           });
         } else {
           setValidationErrors(responseData);
-          if (responseData) {
-            setValidationErrors(responseData);
-          } else {
-            Swal.fire({
-              icon: "error",
-              title: "Error",
-              text: responseData || "Registration failed.",
-            });
-          }
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: (validationErrors as string) || "Registration failed.",
+          });
         }
-      } catch (error) {
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: "An error occurred during registration.",
-        });
+      } catch (error: unknown) {
+        if (error instanceof Error || !(error instanceof Error))
+          Swal.fire({
+            icon: "error",
+            title: "Error",
+            text: "An error occurred during registration.",
+          });
       }
+      return;
     }
   };
   return (
@@ -108,11 +161,23 @@ export function Login() {
           {changeForm && (
             <>
               <div className={styles.input}>
-                <input type="text" placeholder="Email da conta" required />
+                <input
+                  type="text"
+                  placeholder="Email da conta"
+                  name="email"
+                  onChange={(e) => handleChange(e)}
+                  required
+                />
                 <AtIcon />
               </div>
               <div className={styles.input}>
-                <input type="password" placeholder="Senha" required />
+                <input
+                  name="password"
+                  type="password"
+                  placeholder="Senha"
+                  onChange={(e) => handleChange(e)}
+                  required
+                />
                 <PasswordIcon />
                 <button type="button">
                   <EyeIcon />
@@ -186,11 +251,7 @@ export function Login() {
                 <img src={googleIcon} alt="Ícone do Google" />
                 Login com Google
               </button>
-              <button
-                className={styles.sign_in_bttn}
-                type="button"
-                onClick={() => navigate("/inicio")}
-              >
+              <button className={styles.sign_in_bttn} type="submit">
                 Fazer login
               </button>
             </>
@@ -198,9 +259,9 @@ export function Login() {
           {!changeForm && (
             <button
               className={`${styles.create_account_bttn} ${acceptedTerms ? styles.active : ""}`}
-              type="button"
+              type="submit"
               disabled={!acceptedTerms}
-              onClick={() => navigate("/inicio")}
+              //onClick={(e) => handleSubmit(e)}
             >
               Criar conta
             </button>

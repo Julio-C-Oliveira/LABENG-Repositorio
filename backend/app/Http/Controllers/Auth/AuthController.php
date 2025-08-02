@@ -36,17 +36,6 @@ class AuthController extends Controller
     public function signup(SignUpRequest $request)
     {
         $data = $request->validated();
-        /*
-        $userService->createUser([
-            "username" => $data["username"],
-            "email" => $data["email"],
-            "password" => $data["password"],
-        ]);
-        $user = User::create([
-            "name" => $userService->usernamename,
-            "email" => $userService->email,
-            "password" => $userService->password,
-        ]); */
         $user = User::create([
             "name" => $data["name"],
             "email" => $data["email"],
