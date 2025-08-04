@@ -1,4 +1,7 @@
+<<<<<<< HEAD
 import React, { useState } from 'react';
+=======
+>>>>>>> user/mario
 import { useNavigate, } from 'react-router';
 
 import styles from './Home.module.css';
@@ -9,7 +12,10 @@ import {
 } from '@phosphor-icons/react';
 
 export function Home(){
+<<<<<<< HEAD
   const [searchText, setSearchText] = useState('');
+=======
+>>>>>>> user/mario
   const navigate = useNavigate();
 
   const categoriesArr = [
@@ -33,6 +39,7 @@ export function Home(){
     },
   ];
 
+<<<<<<< HEAD
   async function handleSearch(text: string) {
     console.log('handleSearch chamada:', text);
 
@@ -81,11 +88,20 @@ export function Home(){
 
 
 return (
+=======
+  async function handleSearch(text: string){
+    console.log(text);
+    navigate('/inicio/resultados');
+  };
+
+  return(
+>>>>>>> user/mario
     <div className={styles.container}>
       <h1 className={styles.title}>
         Procure por projetos desenvolvidos na <br /> <span>Computação da UFPA</span>
       </h1>
       <div className={styles.search_input}>
+<<<<<<< HEAD
         <MagnifyingGlassIcon />
         <input
           type="text"
@@ -97,10 +113,18 @@ return (
               handleSearch(searchText);
             }
           }}
+=======
+        <MagnifyingGlassIcon/>
+        <input 
+          type="text" 
+          placeholder='Digite o nome ou tema relacionado ao projeto'
+          onKeyDown={(e) => e.key === 'Enter' && handleSearch('')}
+>>>>>>> user/mario
         />
       </div>
       <nav className={styles.nav}>
         <h2 className={styles.nav_title}>Navegue por categorias de projetos</h2>
+<<<<<<< HEAD
           <ul>
             {categoriesArr.map((cat) => (
               <li key={cat.name}>
@@ -119,4 +143,25 @@ return (
       </nav>
     </div>
   )
+=======
+        <ul>
+          {categoriesArr.map((data, i) => (
+            <li key={`categorie-${i}`}>
+              <button 
+                type="button"
+                onClick={() => handleSearch(data.name)}
+              >
+                <div className={styles.icon}>
+                  <CodeIcon/>
+                </div>
+                <span>{data.name}</span>
+              </button>
+            </li>
+          ))}
+        </ul>
+      </nav>
+
+    </div>
+  );
+>>>>>>> user/mario
 };
