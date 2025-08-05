@@ -10,12 +10,13 @@ use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\User;
 
-class UserService extends Authenticatable implements JWTSubject
+class UserService extends Authenticatable
 {
     public function createUser(array $data): User
     {
         $user = new User();
         $user->name = $data["name"];
+        $user->username = $data["username"];
         $user->email = $data["email"];
         $user->password = Hash::make($data["password"]);
         $user->save();
