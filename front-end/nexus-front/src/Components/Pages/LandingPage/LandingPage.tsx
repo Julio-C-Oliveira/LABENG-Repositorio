@@ -14,7 +14,7 @@ export function LandingPage(){
         alt="Logo da plataforma"
       />
       <h1>Página em construção...</h1>
-      <NavLink to={'/login'}>
+      <NavLink to={'/inicio'}>
         Acessar plataforma
       </NavLink>
 

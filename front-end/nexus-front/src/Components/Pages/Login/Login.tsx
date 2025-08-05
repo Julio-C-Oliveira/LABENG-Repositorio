@@ -1,146 +1,162 @@
-import { AxiosError } from "axios";
-import Cookie from "js-cookie";
-import React, { useState } from "react";
-import { useNavigate } from "react-router";
-import Swal from "sweetalert2";
-import styles from "./Login.module.css";
-import ilustracao1 from "/ilustracoes/nexus-ilustracao-letra-n.svg";
-import brasaoUFPA from "/imgs/brasao-ufpa-personalizado.png";
-import logo from "/logo-nexus/nexus-logo-white.svg";
+import { useNavigate } from 'react-router';
+import { useState } from 'react';
 
-//import logo from '/logo-nexus/nexus-logo.svg';
-import { api } from "../../../services/api";
-import { LoginForm } from "./LoginForm";
-import { SignupForm } from "./SignUpForm";
-import logotipo from "/logo-nexus/nexus-logotipo.svg";
+import styles from './Login.module.css';
 
-export function Login() {
-    const navigate = useNavigate();
+import { 
+  AtIcon,
+  PasswordIcon,
+  EyeIcon,
+  UserIcon,
+} from '@phosphor-icons/react';
 
-    const [changeForm, setChangeForm] = useState<boolean>(true);
-    const [validationErrors, setValidationErrors] = useState({});
+import googleIcon from '/imgs/google-icon.png';
+import brasaoUFPA from '/imgs/brasao-ufpa-personalizado.png';
+import logo from '/logo-nexus/nexus-logo-white.svg';
+import ilustracao1 from '/ilustracoes/nexus-ilustracao-letra-n.svg';
 
-    const handleLogin = React.useCallback(async (mail: string, password: string) => {
-        try {
-            const response = await api.post("/auth/login/", {
-                email: mail,
-                password: password,
-            });
+import logotipo from '/logo-nexus/nexus-logotipo.svg';
 
-            const token = response?.data?.token;
-            Cookie.set("token", token, { expires: 7 }); // Store token in cookies for 7 days
+export function Login(){
+  const navigate = useNavigate();
 
-            Swal.fire({
-                icon: "success",
-                title: "Login Successful",
-                text: "Welcome back!",
-            }).then(() => {
-                navigate("/inicio");
-            });
-        } catch (error) {
-            if (error instanceof AxiosError) {
-                if (error.response && error.response.status === 401) {
-                    Swal.fire({
-                        icon: "error",
-                        title: "Login Failed",
-                        text: "Invalid email or password. Please try again.",
-                    });
-                } else {
-                    const responseData = error.response!.data;
-                    const responseMessage = responseData?.message || "An error occurred during login.";
-                    setValidationErrors(responseMessage);
-                    Swal.fire({
-                        icon: "error",
-                        title: "Error",
-                        text: (responseMessage as string) || "Registration failed.",
-                    });
-                }
-            }
-        }
-    }, []);
+  const form_sign_up = localStorage.getItem('form_sign_up');
+  const [changeForm, setChangeForm] = useState<boolean>(!form_sign_up ? true : false);
+  const [acceptedTerms, setAcceptedTerms] = useState<boolean>(false);
 
-    const handleSignUp = React.useCallback(async (name: string, username: string, mail: string, password: string, password_confirmation: string) => {
-        try {
-            const response = await api.post("/auth/signup/", {
-                name: name,
-                username: username,
-                email: mail,
-                password: password,
-                password_confirmation: password_confirmation,
-            });
+  async function handleLogin(){
+    localStorage.removeItem('form_sign_up');
+    localStorage.setItem('user_auth', JSON.stringify(true));
+    navigate('/inicio');
+  };
 
-            const token = response?.data?.token;
-            Cookie.set("token", token, { expires: 7 }); // Store token in cookies
-            Swal.fire({
-                icon: "success",
-                title: "Account Created",
-                text: "Your account has been created successfully!",
-            }).then(() => {
-                navigate("/inicio");
-            });
-        } catch (error) {
-            if (error instanceof AxiosError) {
-                const responseData = error.response!.data;
-                const responseMessage = responseData?.message || "An error occurred during registration.";
-                setValidationErrors(responseData);
-                Swal.fire({
-                    icon: "error",
-                    title: "Error",
-                    text: (responseMessage as string) || "Registration failed.",
-                });
-            }
-        }
-    }, []);
+  return(
+    <div className={styles.container}>
+      <section className={styles.illustration_wrapper}>
+        <img
+          className={styles.logo}
+          src={logo} 
+          alt="Logo da plataforma"
+        />
+        <span className={styles.title}>
+          Encontre todos os projetos desenvolvidos <br /> na FACOMP, <b>incluindo os seus!</b>
+        </span>
+        <a className={styles.link_ufpa} href="https://ufpa.br/" target='_blank'>
+          <img 
+            src={brasaoUFPA} 
+            alt="Brasão da UFPA. Link para o site oficial da universidade"
+          />
+        </a>
+        <img
+          className={styles.ilustracao1} 
+          src={ilustracao1} 
+          alt="Ilustração"
+        />
+        <img
+          className={styles.ilustracao2} 
+          src={ilustracao1} 
+          alt="Ilustração"
+        />
+      </section>
+      <section className={styles.form_wrapper}>
+        <hr/>
+        <form className={styles.form}>
+          <img 
+            className={styles.form_logo} 
+            src={logotipo} 
+            alt="Logo da plataforma"
+          />
+          {changeForm && (
+            <>
+              <div className={styles.input}>
+                <input type="text" placeholder='Email da conta' required/>
+                <AtIcon/>
+              </div>
+              <div className={styles.input}>
+                <input type="password" placeholder='Senha' required/>
+                <PasswordIcon/>
+                <button type="button">
+                  <EyeIcon/>
+                </button>
+              </div>
+            </> 
+          )}
+          {!changeForm && (
+            <>
+              <div className={styles.input}>
+                <input type="text" placeholder='Nome de usuário' required/>
+                <UserIcon/>
+              </div>
+              <div className={styles.input}>
+                <input type="text" placeholder='Email institucional' required/>
+                <AtIcon/>
+              </div>
+              <div className={styles.input}>
+                <input type="password" placeholder='Senha' required/>
+                <PasswordIcon/>
+                <button type="button">
+                  <EyeIcon/>
+                </button>
+              </div>
+              <div className={styles.input}>
+                <input type="password" placeholder='Confirmar senha' required/>
+                <PasswordIcon/>
+                <button type="button">
+                  <EyeIcon/>
+                </button>
+              </div>
 
-    return (
-        <div className={styles.container}>
-            <section className={styles.illustration_wrapper}>
-                <img className={styles.logo} src={logo} alt="Logo da plataforma" />
-                <span className={styles.title}>
-                    Encontre todos os projetos desenvolvidos <br /> na FACOMP,{" "}
-                    <b>incluindo os seus!</b>
+              <div className={styles.agree_terms}>
+                <button
+                  className={`${styles.agree_bttn} ${acceptedTerms ? styles.active : ''}`} 
+                  type="button"
+                  onClick={() => setAcceptedTerms(!acceptedTerms)}
+                ></button>
+                <span className={styles.agree_text}>
+                  Ao criar sua conta, você concorda com nossos <button type="button">termos de uso</button> e <button type="button">política de privacidade</button>
                 </span>
-                <a className={styles.link_ufpa} href="https://ufpa.br/" target="_blank">
-                    <img
-                        src={brasaoUFPA}
-                        alt="Brasão da UFPA. Link para o site oficial da universidade"
-                    />
-                </a>
-                <img
-                    className={styles.ilustracao1}
-                    src={ilustracao1}
-                    alt="Ilustração"
-                />
-                <img
-                    className={styles.ilustracao2}
-                    src={ilustracao1}
-                    alt="Ilustração"
-                />
-            </section>
-            <section className={styles.form_wrapper}>
-                <hr />
-                <div className={styles.form}>
-                    <img
-                        className={styles.form_logo}
-                        src={logotipo}
-                        alt="Logo da plataforma"
-                    />
-                    {changeForm && (
-                        <LoginForm handleSubmit={handleLogin} />
-                    )}
-                    {!changeForm && (
-                        <SignupForm handleSubmit={handleSignUp} />
-                    )}
-                </div>
-                <div className={styles.change_form}>
-                    <span>
-                        {changeForm ? "Ainda não possui conta?" : "Já possui uma conta?"}
-                    </span>
-                    <button type="button" onClick={() => setChangeForm(!changeForm)}>
-                        {changeForm ? "Crie agora de forma fácil" : "Faça o seu login"}
-                    </button>
-                </div>
-            </section>
+              </div>
+            </>
+          )}
+          <hr className={styles.line}/>
+          {changeForm && (
+            <>
+              <button
+                className={styles.login_social} 
+                type="button"
+              >
+                <img src={googleIcon} alt="Ícone do Google"/>
+                Login com Google
+              </button>
+              <button
+                className={styles.sign_in_bttn} 
+                type="button"
+                onClick={() => handleLogin()}
+              >
+                Fazer login
+              </button>
+            </>
+          )}
+          {!changeForm && (
+            <button
+              className={`${styles.create_account_bttn} ${acceptedTerms ? styles.active : ''}`} 
+              type="button"
+              disabled={!acceptedTerms}
+              onClick={() => handleLogin()}
+            >
+              Criar conta
+            </button>
+          )}
+        </form>
+        <div className={styles.change_form}>
+          <span>
+            {changeForm ? 'Ainda não possui conta?' : 'Já possui uma conta?'}
+          </span>
+          <button type="button" onClick={() => setChangeForm(!changeForm)}>
+            {changeForm ? 'Crie agora de forma fácil' : 'Faça o seu login'}
+          </button>
         </div>
-    );
-}
+      </section>
+    </div>
+  );
+};

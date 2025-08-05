@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-image: url(/imgs/project-image-1.png);
+  /* background-image: url(/imgs/project-image-1.png); */
   background-size: contain;
   background-position: top center;
 }
@@ -63,7 +63,7 @@
 }
 
 .project_highlight{
-  border-radius: 2rem;
+  border-radius: 1.5rem;
   display: flex;
   overflow: hidden;
 }
@@ -96,12 +96,27 @@
   font-weight: 500;
 }
 
+.profile_img{
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .profile_img button{
   background-color: transparent;
   border: 0;
   border-radius: 99rem;
   display: flex;
   cursor: pointer;
+
+  transition: transform .3s ease;
+}
+
+.profile_img button:hover{
+  z-index: 1;
+}
+
+.profile_img button:not(:first-child){
+  margin-left: -2rem;
 }
 
 .profile_img img{
@@ -140,6 +155,11 @@
 
 .row .value.finalizado{
   color: var(--color-green-1);
+  font-weight: 600;
+}
+
+.row .value.em_desenvolvimento{
+  color: var(--color-orange-1);
   font-weight: 600;
 }
 
@@ -208,6 +228,7 @@
   gap: 1rem;
   position: fixed;
   bottom: 2rem;
+  z-index: 1;
   transform: translateX(100vw - 50%);
   cursor: pointer;
 }
@@ -223,6 +244,165 @@
   font-weight: 600;
 }
 
+/* === gallery_images ===*/
+.gallery_images{
+  margin: 3rem 0;
+}
+
+.img_full_screen{
+  width: 100%;
+  height: 100%;
+  background-color: #0007;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+.img_full_screen img{
+  width: 90%;
+  max-width: 110rem;
+  user-select: none;
+}
+
+/*=== profile_modal_wrapper ===*/
+.profile_modal_wrapper{
+  width: 100%;
+  height: 100%;
+  background-color: #0007;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 2;
+}
+
+.profile_modal{
+  width: 90%;
+  max-width: 60rem;
+  background-color: #FFF;
+  padding: 1.5rem;
+  border-radius: 2rem;
+  box-shadow: var(--box-shadow-2);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.profile_modal .profile_wallpaper{
+  width: 100%;
+  height: 10rem;
+  background-color: var(--color-main-2);
+  background-image: linear-gradient(to right, var(--color-main-2), var(--color-main-0));
+  border-radius: 1.5rem;
+}
+
+.profile_modal_figure{
+  margin-top: -4rem;
+  margin-bottom: 1.5rem;
+  position: relative;
+}
+
+.profile_modal_img{
+  width: 8rem;
+  border: 4px solid #FFF;
+  border-radius: 50%;
+  display: flex;
+  position: relative;
+  z-index: 1;
+}
+
+.profile_modal_figure::before,
+.profile_modal_figure::after{
+  --size: 3.5rem;
+  content: '';
+  width: var(--size);
+  height: var(--size);
+  border-radius: 50%;
+
+  position: absolute;
+  top: .5rem;
+}
+
+.profile_modal_figure::before{
+  box-shadow: 20px 20px 0 var(--color-white);
+  right: calc(100% - .3rem);
+}
+
+.profile_modal_figure::after{
+  box-shadow: -20px 20px 0 var(--color-white);
+  left: calc(100% - .3rem);
+}
+
+.profile_modal h4{
+  margin-bottom: .3rem;
+  font-size: var(--font-size-5x);
+  font-weight: 600;
+  text-align: center;
+}
+
+.profile_modal span{
+  margin-bottom: 1.5rem;
+  color: var(--color-black-5);
+  font-size: var(--font-size-3x);
+}
+
+.profile_modal p{
+  max-height: 14rem;
+  margin-bottom: 2.5rem;
+  color: var(--color-black-3);
+  font-size: var(--font-size-3x);
+  overflow-y: auto;
+}
+
+.profile_contact{
+  margin-bottom: 2.5rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.profile_contact button,
+.profile_contact a{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.profile_contact button img,
+.profile_contact a img{
+  height: 2.7rem;
+}
+
+.profile_modal_close_bttn{
+  width: 100%;
+  border: 0;
+  padding: 1rem;
+  border-radius: 1.5rem;
+  background-color: var(--color-main-2);
+  color: var(--color-white);
+  font-weight: 500;
+  cursor: pointer;
+  
+  transition: .2s ease opacity;
+}
+
+.profile_modal_close_bttn:hover{
+  opacity: .7;
+}
+
+
 @media (min-width: 768px){
   .gradient{
     height: 40rem;
@@ -234,6 +414,11 @@
 
   .project_description{
     font-size: var(--font-size-4x);
+  }
+
+  .profile_img button:hover{
+    transform: translateY(-1rem);
+    z-index: 1;
   }
 
   .project_details .row{

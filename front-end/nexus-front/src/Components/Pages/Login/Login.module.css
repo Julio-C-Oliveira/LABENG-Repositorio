@@ -63,8 +63,8 @@
 .form_wrapper{
   width: 100%;
   max-width: 45rem;
-  border: 0px solid red;
   padding: 3rem 4rem;
+  background-color: var(--color-bg);
 
   display: flex;
   flex-direction: column;

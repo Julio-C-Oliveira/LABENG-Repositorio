@@ -1,15 +1,13 @@
-import { useState } from 'react';
 import { useNavigate, } from 'react-router';
 
 import styles from './Home.module.css';
 
-import {
-  CodeIcon,
+import { 
   MagnifyingGlassIcon,
+  CodeIcon,
 } from '@phosphor-icons/react';
 
 export function Home(){
-  const [searchText, setSearchText] = useState('');
   const navigate = useNavigate();
 
   const categoriesArr = [

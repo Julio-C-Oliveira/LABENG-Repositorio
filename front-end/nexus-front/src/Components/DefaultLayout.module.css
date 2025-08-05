@@ -1,7 +1,6 @@
 .container{
   min-height: 100vh;
   background-color: var(--color-bg);
-
   display: flex;
   flex-direction: column;
   position: relative;
@@ -10,19 +9,16 @@
 .header{
   width: 100%;
   height: 7rem;
-  border: 0px solid blue;
-  background-color: #FFF8;
+  background-color: #fcfcfc80;
   padding: 0rem 2.5rem;
   backdrop-filter: blur(10px);
-
   display: flex;
   align-items: center;
   justify-content: space-between;
-
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 1;
+  z-index: 2;
 }
 
 .logo{
@@ -54,6 +50,95 @@
   gap: 1rem;
 }
 
+.header_wrapper .sign_in_bttn,
+.header_wrapper .sign_up_bttn{
+  border-radius: 1rem;
+  padding: .8rem 1.3rem;
+  font-size: var(--font-size-3x);
+  font-weight: 600;
+}
+
+.header_wrapper .sign_in_bttn{
+  color: var(--color-main-2);
+}
+
+.header_wrapper .sign_in_bttn:hover{
+  background-color: var(--color-main-0);
+}
+
+.header_wrapper .sign_up_bttn{
+  background-color: var(--color-main-2);
+  color: var(--color-white);
+}
+
+.userOptions{
+  background-color: var(--color-white);
+  border-radius: 1.5rem;
+  box-shadow: var(--box-shadow-1);
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  overflow: hidden;
+  position: absolute;
+  top: 100%;
+  right: 2.5rem;
+}
+
+.userOptions li{
+  width: 100%;
+  display: flex;
+}
+
+.userOptions li .bttn{
+  width: 100%;
+  background-color: var(--color-white);
+  border: 0;
+  padding: 1.5rem 2.5rem;
+  color: var(--color-black-3);
+  font-size: var(--font-size-2x);
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  cursor: pointer;
+}
+
+.userOptions li .bttn.signout_bttn,
+.userOptions li .bttn.signout_bttn svg{
+  color: var(--color-red-1);
+}
+
+.userOptions li .bttn:hover{
+  background-color: #fafafa;
+}
+
+.userOptions li .bttn svg{
+  color: var(--color-main-2);
+  font-size: 2rem;
+}
+
+.userOptions .line{
+  width: 85%;
+  border-top: 1px solid var(--color-main-0);
+}
+
+.userOptions .palette_color_bttn{
+  width: 2rem;
+  height: 2rem;
+  background-color:var(--color-main-2);
+  border-radius: .5rem;
+}
+
+.lock_screen{
+  width: 100%;
+  height: 100%;
+  background-color: #FFF0;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
 .send_project_bttn svg{
   font-size: 2.4rem;
 }
@@ -71,6 +156,74 @@
 .main{
   border: 0px solid green;
   min-height: 100vh;
+}
+
+/*=== palette_color_wrapper ===*/
+.palette_color_wrapper{
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-white);
+
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.palette_color_wrapper_close_bttn{
+  width: 100%;
+  padding: .8rem;
+  background-color: transparent;
+  border: 0;
+  color: var(--color-main-2);
+  font-size: var(--font-size-2x);
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  cursor: pointer;
+}
+
+.palette_color_wrapper_close_bttn svg{
+  font-size: 1.8rem;
+}
+
+.palette_color_options{
+  width: 100%;
+  height: 100%;
+  margin-top: .5rem;
+
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: min-content;
+}
+
+.palette_color_option{
+  background-color: transparent;
+  padding: .5rem;
+  border: 0;
+  color: var(--color-black-4);
+  font-size: var(--font-size-1x);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+
+  cursor: pointer;
+}
+
+.palette_color_option:hover,
+.palette_color_wrapper_close_bttn:hover{
+  background-color: #fafafa;
+}
+
+.palette_color_preview{
+  --size: 4rem;
+
+  width: var(--size);
+  height: var(--size);
+  border-radius: 1rem;
+  background-color: var(--color-preview);
 }
 
 @media (min-width: 768px){
