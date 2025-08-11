@@ -8,8 +8,6 @@ import googleIcon from "/imgs/google-icon.png";
 import brasaoUFPA from "/imgs/brasao-ufpa-personalizado.png";
 import logo from "/logo-nexus/nexus-logo-white.svg";
 import ilustracao1 from "/ilustracoes/nexus-ilustracao-letra-n.svg";
-
-//import logo from '/logo-nexus/nexus-logo.svg';
 import logotipo from "/logo-nexus/nexus-logotipo.svg";
 
 export function Login() {
