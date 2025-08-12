@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router";
-import { useState, type EventHandler } from "react";
+import { useState } from "react";
 import styles from "./SendProject.module.css";
 
 import {
@@ -16,11 +16,84 @@ export function SendProject() {
   const navigate = useNavigate();
   const [keyWord, setKeyWord] = useState<string>("");
   const [listKeyWords, setListKeyWords] = useState<Array<string>>([]);
+  const [coAutor, setCoAutor] = useState<string>("");
+  const [coAutorList, setCoAutorList] = useState<Array<string>>([]);
+  const [autor, setAutor] = useState<string>("");
+  //const [selectedValue, setSelectedValue] = useState<string>("");
+
   const addKeyWords = (e: any) => {
     e.preventDefault();
     setListKeyWords((prev) => [...prev, keyWord]);
     setKeyWord("");
   };
+
+  const addCoAutor = (e: any) => {
+    e.preventDefault();
+    setCoAutorList((prev) => [...prev, coAutor]);
+    setCoAutor("");
+  };
+  const handleChange = (e: any) => {
+    if (e.target.name === "autor") {
+      setAutor(e.target.value);
+    }
+    if (e.target.name === "keywords") {
+      setKeyWord(e.target.value);
+    }
+    if (e.target.name === "coautores") {
+      setCoAutor(e.target.value);
+    }
+  };
+  function DropdownAutores() {
+    const handleChangeDropDown = (e: any) => {
+      setAutor(e.target.value);
+    };
+    return (
+      <div>
+        <label>
+          <select
+            name="pets"
+            multiple
+            size="4"
+            value=""
+            onChange={(e: any) => handleChangeDropDown(e)}
+          >
+            <optgroup>
+              <option value="Autor 1">Autor 1</option>
+              <option value="Autor 2">Autor 2</option>
+              <option value="Autor 3">Autor 3</option>
+              <option value="Autor N">Autor N</option>
+            </optgroup>
+          </select>
+        </label>
+      </div>
+    );
+  }
+
+  function DropdownCoAutores() {
+    const handleChangeDropDown = (e: any) => {
+      setCoAutor(e.target.value);
+    };
+    return (
+      <div>
+        <label>
+          <select
+            name="pets"
+            multiple
+            size="4"
+            value=""
+            onChange={(e: any) => handleChangeDropDown(e)}
+          >
+            <optgroup>
+              <option value="CoAutor 1">CoAutor 1</option>
+              <option value="CoAutor 2">CoAutor 2</option>
+              <option value="CoAutor 3">CoAutor 3</option>
+              <option value="CoAutor N">CoAutor N</option>
+            </optgroup>
+          </select>
+        </label>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.container}>
@@ -58,20 +131,28 @@ export function SendProject() {
 
           {/* Palavras-chave */}
           <div className={styles.formGroup}>
-            <label htmlFor="keywords">Palavras-chave*</label>
-            <input
-              type="text"
-              id="keywords"
-              name="keywords"
-              placeholder="Separe as palavras-chave por vírgula"
-              value={keyWord}
-              onChange={(e: any) => setKeyWord(e.target.value)}
-              required
-            />
-            <button type="button" onClick={(e) => addKeyWords(e)}>
-              +
-            </button>
-            {listKeyWords}
+            <div>
+              <label htmlFor="keywords">Palavras-chave*</label>
+              <input
+                type="text"
+                id="keywords"
+                name="keywords"
+                placeholder="Escreva aqui as palavras-chave"
+                value={keyWord}
+                onChange={(e: any) => handleChange(e)}
+                required
+              />
+              <button type="button" onClick={(e) => addKeyWords(e)}>
+                +
+              </button>
+            </div>
+            {listKeyWords.length > 0 && (
+              <div>
+                {listKeyWords.map((kw) => (
+                  <p>{kw}</p>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Autor */}
@@ -79,22 +160,40 @@ export function SendProject() {
             <label htmlFor="author">Autor*</label>
             <input
               type="text"
-              id="author"
-              name="author"
+              id="autor"
+              name="autor"
               placeholder="Nome do autor"
+              value={autor}
+              onChange={(e: any) => handleChange(e)}
               required
             />
+            {autor != "" && <DropdownAutores />}
           </div>
 
           {/* Co-autores */}
           <div className={styles.formGroup}>
-            <label htmlFor="coauthors">Co-autores</label>
-            <input
-              type="text"
-              id="coauthors"
-              name="coauthors"
-              placeholder="Separe os nomes dos co-autores por vírgula"
-            />
+            <div>
+              <label htmlFor="coautores">Co-autores</label>
+              <input
+                type="text"
+                id="coautores"
+                name="coautores"
+                placeholder="Escreva aqui o nome dos co-autores"
+                onChange={(e) => handleChange(e)}
+                value={coAutor}
+              />
+              <button type="button" onClick={(e) => addCoAutor(e)}>
+                +
+              </button>
+              {coAutor != "" && <DropdownCoAutores />}
+              {coAutorList.length > 0 && (
+                <div>
+                  {coAutorList.map((coAutor: string) => (
+                    <p>{coAutor}</p>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Data da publicação */}
