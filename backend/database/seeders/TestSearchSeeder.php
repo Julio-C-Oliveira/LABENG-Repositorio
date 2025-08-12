@@ -21,6 +21,7 @@ class TestSearchSeeder extends Seeder
     {
         // Garante pelo menos um usuário para associar os projetos
         $user = User::first() ?? User::factory()->create([
+            'name' => 'name_seed',
             'username' => 'usuario_seed',
             'email' => 'seed@example.com',
             'password' => bcrypt('password123'),
