@@ -38,9 +38,16 @@ class ProjectController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(string $slug)
     {
-        //
+        $project = Project::where('slug', $slug)->first();
+
+        if (!$project) {
+            return response()->json(['error' => 'Projeto não encontrado'], 404);
+        }
+
+        // Se quiser já incluir tags/autores, você pode carregar aqui também
+        return response()->json($project);
     }
 
     /**
