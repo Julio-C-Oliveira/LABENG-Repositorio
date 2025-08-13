@@ -25,8 +25,9 @@ export function Results() {
 
   const [searchText, setSearchText] = useState('');
 
-  async function handleProject() {
-    navigate('/inicio/projeto'); // Aqui vai ser a parte de redirecionar pro projeto
+  async function handleProject(slug: string) {
+    console.log("Results - Slug:", slug)
+    navigate(`/inicio/projeto/${slug}`); // Aqui vai ser a parte de redirecionar pro projeto
   }
 
   async function handleSearch(text: string) {
@@ -107,7 +108,7 @@ export function Results() {
             <button
               className={styles.card}
               type="button"
-              onClick={() => handleProject()}
+              onClick={() => handleProject(result.slug)}  // Aqui é onde redireciona para página do projeto
             >
               <div
                 className={styles.card_image}
