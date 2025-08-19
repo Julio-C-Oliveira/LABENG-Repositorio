@@ -34,4 +34,19 @@ Route::middleware("auth:sanctum")->group(function () {
             "me",
         ])->name("auth.hello");
     });
+
+    Route::prefix("projects", function() {
+        Route::post("/", [
+            \App\Http\Controllers\ProjectController::class,
+            "store",
+        ])->name("projects.store");
+        Route::put("/{slug}", [
+            \App\Http\Controllers\ProjectController::class,
+            "update",
+        ])->name("projects.update");
+        Route::delete("/{slug}", [
+            \App\Http\Controllers\ProjectController::class,
+            "destroy",
+        ])->name("projects.destroy");
+    });
 });

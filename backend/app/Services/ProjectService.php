@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Project;
+use Illuminate\Support\Str;
 
 class ProjectService
 {
@@ -19,5 +20,42 @@ class ProjectService
         return Project::with(['user'])
             ->orderBy('published_at', 'desc')
             ->paginate($perPage, ['*'], 'page', $page);
+    }
+
+    public function getProjectBySlug(string $slug)
+    {
+        return Project::with(['user'])
+            ->where('slug', $slug)
+            ->first();
+    }
+
+    public function createProject(array $data)
+    {
+        $project = new Project();
+
+        $project->title = $data['title'];
+        $project->slug = Str::slug($data['title']) . '-' . uniqid();
+        $project->description = $data['description'];
+        $project->link = $data['link'];
+        $project->user_id = $data['user_id'];
+        $project->status = $data['status'];
+        $project->pdf_link = $data['pdf_link'];
+        $project->github_link = $data['github_link'];
+
+        $project->save();
+
+        return $project;
+    }
+
+    public function getUserProjectById(int $user_id, int $project_id)
+    {
+        return Project::where('id', $project_id)
+            ->where('user_id', $user_id)
+            ->first();
+    }
+
+    public function deleteProject(Project $project)
+    {
+        return $project->delete();
     }
 }
