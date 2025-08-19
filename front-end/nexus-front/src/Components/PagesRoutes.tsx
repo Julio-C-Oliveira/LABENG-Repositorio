@@ -20,7 +20,7 @@ export default function PagesRoutes() {
           <Route path="/inicio" element={<DefaultLayout />}>
             <Route path="/inicio" element={<Home />} />
             <Route path="/inicio/resultados" element={<Results />} />
-            <Route path="/inicio/projeto" element={<Project />} />
+            <Route path="/inicio/projeto/:slug" element={<Project />} />
             <Route path="/inicio/enviarProjeto" element={<SendProject />} />
           </Route>
         </Route>

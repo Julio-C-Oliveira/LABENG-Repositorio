@@ -107,4 +107,19 @@ class ProjectController extends Controller
             'message' => 'Project deleted successfully',
         ]);
     }
+
+    /**
+     * Realiza a busca de projetos
+     */
+    public function search(Request $request, ProjectService $projectService) {
+        $request->validate([
+            'query' => 'required|string|min:3', // Pra pesquisar somente se houverem pelo menos 3 caracteres inseridos.
+        ]);
+
+        $query = $request->has('query') ? $request->input('query') : null;
+
+        $projects = $projectService->getAllProjects(search: $query);
+
+        return response()->json($projects);
+    }
 }

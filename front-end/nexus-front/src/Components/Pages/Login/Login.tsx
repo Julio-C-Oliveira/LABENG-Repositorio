@@ -1,61 +1,35 @@
+import { AxiosError } from "axios";
+import Cookie from "js-cookie";
+import React, { useState } from "react";
 import { useNavigate } from "react-router";
-import { useState, type ChangeEvent } from "react";
-import axios, { AxiosError } from "axios";
-import styles from "./Login.module.css";
-import { AtIcon, PasswordIcon, EyeIcon, UserIcon } from "@phosphor-icons/react";
 import Swal from "sweetalert2";
-import googleIcon from "/imgs/google-icon.png";
+import styles from "./Login.module.css";
+import ilustracao1 from "/ilustracoes/nexus-ilustracao-letra-n.svg";
 import brasaoUFPA from "/imgs/brasao-ufpa-personalizado.png";
 import logo from "/logo-nexus/nexus-logo-white.svg";
-import ilustracao1 from "/ilustracoes/nexus-ilustracao-letra-n.svg";
+
+//import logo from '/logo-nexus/nexus-logo.svg';
+import { api } from "../../../services/api";
+import { LoginForm } from "./LoginForm";
+import { SignupForm } from "./SignUpForm";
 import logotipo from "/logo-nexus/nexus-logotipo.svg";
 
 export function Login() {
   const navigate = useNavigate();
 
   const [changeForm, setChangeForm] = useState<boolean>(true);
-  const [acceptedTerms, setAcceptedTerms] = useState<boolean>(false);
-
-  const [formDataRegister, setFormDataRegister] = useState({
-    name: "",
-    email: "",
-    password: "",
-  });
-
-  const [formDataLogin, setFormDataLogin] = useState({
-    email: "",
-    password: "",
-  });
   const [validationErrors, setValidationErrors] = useState({});
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
-    if (changeForm) {
-      console.log(e.target.name);
-      setFormDataLogin({
-        ...formDataLogin,
-        [e.target.name]: e.target.value,
-      });
-    } else {
-      setFormDataRegister({
-        ...formDataRegister,
-        [e.target!.name]: e.target!.value,
-      });
-    }
-  };
-
-  const handleSubmit = async (e: React.SyntheticEvent<HTMLFormElement>) => {
-    if (changeForm) {
+  const handleLogin = React.useCallback(
+    async (mail: string, password: string) => {
       try {
-        e.preventDefault();
-        console.log(formDataLogin);
-        const response = await axios.post(
-          "http://127.0.0.1:8000/api/auth/login/",
-          formDataLogin,
-        );
+        const response = await api.post("/auth/login/", {
+          email: mail,
+          password: password,
+        });
 
-        const token = response.data.authorisation.token;
-
-        localStorage.setItem("token", token);
+        const token = response?.data?.token;
+        Cookie.set("token", token, { expires: 7 }); // Store token in cookies for 7 days
 
         Swal.fire({
           icon: "success",
@@ -64,7 +38,7 @@ export function Login() {
         }).then(() => {
           navigate("/inicio");
         });
-      } catch (error: unknown) {
+      } catch (error) {
         if (error instanceof AxiosError) {
           if (error.response && error.response.status === 401) {
             Swal.fire({
@@ -74,55 +48,64 @@ export function Login() {
             });
           } else {
             const responseData = error.response!.data;
-            setValidationErrors(responseData);
+            const responseMessage =
+              responseData?.message || "An error occurred during login.";
+            setValidationErrors(responseMessage);
             Swal.fire({
               icon: "error",
               title: "Error",
-              text: (validationErrors as string) || "Registration failed.",
+              text: (responseMessage as string) || "Registration failed.",
             });
           }
         }
       }
-    } else {
-      e.preventDefault();
+    },
+    [],
+  );
+
+  const handleSignUp = React.useCallback(
+    async (
+      name: string,
+      username: string,
+      mail: string,
+      password: string,
+      password_confirmation: string,
+    ) => {
       try {
-        const response = await fetch("http://127.0.0.1:8000/api/auth/signup/", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formDataRegister),
+        const response = await api.post("/auth/signup/", {
+          name: name,
+          username: username,
+          email: mail,
+          password: password,
+          password_confirmation: password_confirmation,
         });
 
-        const responseData = await response.json();
-        if (response.ok) {
-          setValidationErrors("");
-          Swal.fire({
-            icon: "success",
-            title: "Success",
-            text: responseData.message,
-          }).then(() => {
-            window.location.href = "/login";
-          });
-        } else {
+        const token = response?.data?.token;
+        Cookie.set("token", token, { expires: 7 }); // Store token in cookies
+        Swal.fire({
+          icon: "success",
+          title: "Account Created",
+          text: "Your account has been created successfully!",
+        }).then(() => {
+          navigate("/inicio");
+        });
+      } catch (error) {
+        if (error instanceof AxiosError) {
+          const responseData = error.response!.data;
+          const responseMessage =
+            responseData?.message || "An error occurred during registration.";
           setValidationErrors(responseData);
           Swal.fire({
             icon: "error",
             title: "Error",
-            text: (validationErrors as string) || "Registration failed.",
+            text: (responseMessage as string) || "Registration failed.",
           });
         }
-      } catch (error: unknown) {
-        if (error instanceof Error || !(error instanceof Error))
-          Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: "An error occurred during registration.",
-          });
       }
-      return;
-    }
-  };
+    },
+    [],
+  );
+
   return (
     <div className={styles.container}>
       <section className={styles.illustration_wrapper}>
@@ -150,121 +133,15 @@ export function Login() {
       </section>
       <section className={styles.form_wrapper}>
         <hr />
-        <form className={styles.form} onSubmit={(e) => handleSubmit(e)}>
+        <div className={styles.form}>
           <img
             className={styles.form_logo}
             src={logotipo}
             alt="Logo da plataforma"
           />
-          {changeForm && (
-            <>
-              <div className={styles.input}>
-                <input
-                  type="text"
-                  placeholder="Email da conta"
-                  name="email"
-                  onChange={(e) => handleChange(e)}
-                  required
-                />
-                <AtIcon />
-              </div>
-              <div className={styles.input}>
-                <input
-                  name="password"
-                  type="password"
-                  placeholder="Senha"
-                  onChange={(e) => handleChange(e)}
-                  required
-                />
-                <PasswordIcon />
-                <button type="button">
-                  <EyeIcon />
-                </button>
-              </div>
-            </>
-          )}
-          {!changeForm && (
-            <>
-              <div className={styles.input}>
-                <input
-                  type="text"
-                  onChange={(e) => handleChange(e)}
-                  placeholder="Nome de usuário"
-                  required
-                />
-                <UserIcon />
-              </div>
-              <div className={styles.input}>
-                <input
-                  type="text"
-                  onChange={(e) => handleChange(e)}
-                  placeholder="Email institucional"
-                  required
-                />
-                <AtIcon />
-              </div>
-              <div className={styles.input}>
-                <input
-                  type="password"
-                  onChange={(e) => handleChange(e)}
-                  placeholder="Senha"
-                  required
-                />
-                <PasswordIcon />
-                <button type="button">
-                  <EyeIcon />
-                </button>
-              </div>
-              <div className={styles.input}>
-                <input
-                  type="password"
-                  onChange={(e) => handleChange(e)}
-                  placeholder="Confirmar senha"
-                  required
-                />
-                <PasswordIcon />
-                <button type="button">
-                  <EyeIcon />
-                </button>
-              </div>
-
-              <div className={styles.agree_terms}>
-                <button
-                  className={`${styles.agree_bttn} ${acceptedTerms ? styles.active : ""}`}
-                  type="button"
-                  onClick={() => setAcceptedTerms(!acceptedTerms)}
-                ></button>
-                <span className={styles.agree_text}>
-                  Ao criar sua conta, você concorda com nossos{" "}
-                  <button type="button">termos de uso</button> e{" "}
-                  <button type="button">política de privacidade</button>
-                </span>
-              </div>
-            </>
-          )}
-          <hr className={styles.line} />
-          {changeForm && (
-            <>
-              <button className={styles.login_social} type="button">
-                <img src={googleIcon} alt="Ícone do Google" />
-                Login com Google
-              </button>
-              <button className={styles.sign_in_bttn} type="submit">
-                Fazer login
-              </button>
-            </>
-          )}
-          {!changeForm && (
-            <button
-              className={`${styles.create_account_bttn} ${acceptedTerms ? styles.active : ""}`}
-              type="submit"
-              disabled={!acceptedTerms}
-              //onClick={(e) => handleSubmit(e)}
-            >
-              Criar conta
-            </button>
-          )}
-        </form>
+          {changeForm && <LoginForm handleSubmit={handleLogin} />}
+          {!changeForm && <SignupForm handleSubmit={handleSignUp} />}
+        </div>
         <div className={styles.change_form}>
           <span>
             {changeForm ? "Ainda não possui conta?" : "Já possui uma conta?"}

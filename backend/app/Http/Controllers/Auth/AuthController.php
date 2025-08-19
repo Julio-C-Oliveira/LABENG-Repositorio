@@ -33,25 +33,19 @@ class AuthController extends Controller
         );
     }
 
-    public function signup(SignUpRequest $request)
+    public function signup(SignUpRequest $request, UserService $userService)
     {
         $data = $request->validated();
-        $user = User::create([
-            "name" => $data["name"],
-            "email" => $data["email"],
-            "password" => Hash::make($data["password"]),
-        ]);
+        $user = $userService->createUser($data);
 
-        $token = $user->createToken("auth-token")->plainTextToken;
+        $token = AuthHelper::generateToken($user);
+
         return response()->json(
             [
                 "status" => "success",
                 "message" => "User Registered Successfully",
                 "user" => $user,
-                "authorisation" => [
-                    "token" => $token,
-                    "type" => "bearer",
-                ],
+                "token" => $token,
             ],
             201,
         );
@@ -80,10 +74,7 @@ class AuthController extends Controller
         return response()->json([
             "status" => "success",
             "user" => $user,
-            "authorisation" => [
-                "token" => $token,
-                "type" => "bearer",
-            ],
+            "token" => $token,
         ]);
         /*
         $user = $userService->findUserByEmail($data["email"]);

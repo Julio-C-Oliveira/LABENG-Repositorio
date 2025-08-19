@@ -15,10 +15,14 @@ class ProjectService
         //
     }
 
-    public function getAllProjects(int $perPage = 10, int $page = 1)
+    public function getAllProjects(int $perPage = 10, int $page = 1, string $search = null)
     {
         return Project::with(['user'])
             ->orderBy('published_at', 'desc')
+            ->when($search, function ($query, $search) {
+                $query->where('title', 'like', '%' . $search . '%')
+                      ->orWhere('description', 'like', '%' . $search . '%');
+            })
             ->paginate($perPage, ['*'], 'page', $page);
     }
 
