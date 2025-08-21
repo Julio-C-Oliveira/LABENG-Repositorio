@@ -20,8 +20,16 @@ class ProjectService
         int $page = 1,
         string $search = null,
     ) {
+        /*
         return Project::with(["user"])
             ->orderBy("published_at", "desc")
+            ->when($search, function ($query, $search) {
+                $query
+                    ->where("title", "like", "%" . $search . "%")
+                    ->orWhere("description", "like", "%" . $search . "%");
+            })
+            ->paginate($perPage, ["*"], "page", $page); */
+        return Project::orderBy("published_at", "desc")
             ->when($search, function ($query, $search) {
                 $query
                     ->where("title", "like", "%" . $search . "%")
@@ -32,9 +40,10 @@ class ProjectService
 
     public function getProjectBySlug(string $slug)
     {
-        return Project::with(["user"])
-            ->where("slug", $slug)
-            ->first();
+        // return Project::with(["user"])
+        //     ->where("slug", $slug)
+        //     ->first();
+        return Project::where("slug", $slug)->first();
     }
 
     public function createProject(array $data)
@@ -63,9 +72,10 @@ class ProjectService
 
     public function getUserProjectById(int $user_id, int $project_id)
     {
-        return Project::where("id", $project_id)
-            ->where("user_id", $user_id)
-            ->first();
+        // return Project::where("id", $project_id)
+        //     ->where("user_id", $user_id)
+        //     ->first();
+        return Project::first();
     }
 
     public function deleteProject(Project $project)
