@@ -14,6 +14,14 @@ import githubLogo from "/imgs/github-icon.png";
 
 export function SendProject() {
   const navigate = useNavigate();
+  const [titulo, setTitulo] = useState<string>("");
+  const [pdf, setPdf] = useState<File | null>(null);
+  //const [codigo, setCodigo] = useState<File | null>(null);
+  const [projectLink, setProjectLink] = useState<string>("");
+  const [github, setGithub] = useState<string | null>("");
+  const [descricao, setDescricao] = useState<string>("");
+  //const [data, setData] = useState<string>("");
+  const [status, setStatus] = useState<string>("");
   const [keyWord, setKeyWord] = useState<string>("");
   const [listKeyWords, setListKeyWords] = useState<Array<string>>([]);
   const [coAutor, setCoAutor] = useState<string>("");
@@ -32,15 +40,64 @@ export function SendProject() {
     setCoAutorList((prev) => [...prev, coAutor]);
     setCoAutor("");
   };
+  const handleSubmit = async (e: any) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch(`http://localhost:8000/api/projects/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          title: titulo,
+          description: descricao,
+          // Adicionar este campo que é esperado pelo backend
+          project: projectLink,
+          user_id: 1, // Este campo é OBRIGATÓRIO pelo backend
+          status: status,
+          pdf_link: pdf, // Mudar de "pdf" para "pdf_link" (como está no backend)
+          github_link: github,
+          // Campos adicionais que você quer enviar (o backend pode ignorar se não existirem)
+          keywords: listKeyWords.join(", "),
+          co_authors: coAutorList.join(", "),
+          type: "TCC",
+          // O campo "project" do seu código original provavelmente se refere ao "zip_url" ou similar
+          // Se for um arquivo zip, considere usar "zip_url" ou outro nome correspondente
+        }),
+      });
+
+      if (response.ok) {
+        console.log("projeto enviado com sucesso");
+        // Limpar os estados após sucesso
+        setTitulo("");
+        setDescricao("");
+        setStatus("");
+        setPdf(null);
+        setGithub("");
+        setProjectLink(""); // Limpar este campo também
+        setListKeyWords([]);
+        setCoAutorList([]);
+        // navigate('/success-page');
+      } else {
+        const errorData = await response.json();
+        console.error("Erro do servidor:", errorData);
+        throw new Error(errorData.message || "Erro ao enviar projeto");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
   const handleChange = (e: any) => {
     if (e.target.name === "autor") {
       setAutor(e.target.value);
     }
     if (e.target.name === "keywords") {
-      setKeyWord(e.target.value);
+      setKeyWord((prev) => prev.concat(e.target.value));
     }
     if (e.target.name === "coautores") {
-      setCoAutor(e.target.value);
+      setCoAutor((prev) => prev.concat(e.target.value));
     }
   };
   function DropdownAutores() {
@@ -104,15 +161,17 @@ export function SendProject() {
       <div>
         <h1 className={styles.title}>Enviar Projeto</h1>
 
-        <form className={styles.form}>
+        <form className={styles.form} onSubmit={(e) => handleSubmit(e)}>
           {/* Nome */}
           <div className={styles.formGroup}>
             <label htmlFor="name">Nome*</label>
             <input
+              value={titulo}
               type="text"
               id="name"
               name="name"
               placeholder="Nome do projeto"
+              onChange={(e) => setTitulo(e.target.value)}
               required
             />
           </div>
@@ -123,6 +182,8 @@ export function SendProject() {
             <textarea
               id="description"
               name="description"
+              value={descricao}
+              onChange={(e) => setDescricao(e.target.value)}
               placeholder="Descreva seu projeto..."
               rows="4"
               required
@@ -140,7 +201,6 @@ export function SendProject() {
                 placeholder="Escreva aqui as palavras-chave"
                 value={keyWord}
                 onChange={(e: any) => handleChange(e)}
-                required
               />
               <button type="button" onClick={(e) => addKeyWords(e)}>
                 +
@@ -203,6 +263,7 @@ export function SendProject() {
               type="date"
               id="publicationDate"
               name="publicationDate"
+              onChange={(e) => setData(e.target.value)}
               required
             />
           </div>
@@ -210,7 +271,18 @@ export function SendProject() {
           {/* Situação (dropdown) */}
           <div className={styles.formGroup}>
             <label htmlFor="status">Situação*</label>
-            <select id="status" name="status" required>
+            <select
+              onChange={(e) => {
+                if (e.target.value === "Em andamento") {
+                  setStatus("draft");
+                } else {
+                  setStatus("published");
+                }
+              }}
+              id="status"
+              name="status"
+              required
+            >
               <option value="">Selecione...</option>
               <option value="Em andamento">Em andamento</option>
               <option value="Concluido">Concluído</option>
@@ -252,6 +324,7 @@ export function SendProject() {
               id="sourceCode"
               name="sourceCode"
               accept=".zip,.rar,.7z"
+              onChange={(e) => setCodigo(e.target.files[0])}
             />
           </div>
 
@@ -265,6 +338,8 @@ export function SendProject() {
               type="url"
               id="github"
               name="github"
+              value={github !== null ? github : ""}
+              onChange={(e) => setGithub(e.target.value)}
               placeholder="https://github.com/usuario/projeto"
             />
           </div>
@@ -275,7 +350,13 @@ export function SendProject() {
               <FilePdfIcon size={20} />
               Documentação (PDF)
             </label>
-            <input type="file" id="pdf" name="pdf" accept=".pdf" />
+            <input
+              type="file"
+              id="pdf"
+              name="pdf"
+              accept=".pdf"
+              onChange={(e) => setPdf(e.target.files![0])}
+            />
           </div>
 
           <button type="submit" className={styles.submitButton}>

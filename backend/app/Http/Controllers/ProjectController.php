@@ -14,17 +14,17 @@ class ProjectController extends Controller
      */
     public function index(ProjectService $projectService)
     {
-        $perPage = request()->input('per_page', 10);
-        $page = request()->input('page', 1);
+        $perPage = request()->input("per_page", 10);
+        $page = request()->input("page", 1);
 
         $projects = $projectService->getAllProjects(
             perPage: $perPage,
-            page: $page
+            page: $page,
         );
 
         return response()->json([
-            'success' => true,
-            'data' => $projects,
+            "success" => true,
+            "data" => $projects,
         ]);
     }
 
@@ -34,29 +34,39 @@ class ProjectController extends Controller
     public function store(Request $request, ProjectService $projectService)
     {
         $validatedData = $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'type' => 'required|in:Article,TCC',
-            'status' => 'required|in:draft,published,archived',
-            'related_fields' => 'nullable|array',
-            'related_fields.*' => 'string|max:255',
-            'pdf' => 'required|file|mimes:pdf|max:10240',
-            'github_link' => 'nullable|string|max:255',
-            'project' => 'required|file|mimes:zip|max:10240',
+            "title" => "required|string|max:255",
+            "description" => "required|string",
+            "type" => "required|in:Article,TCC",
+            "co_authors" => "required|string|max:255",
+            "status" => "required|in:draft,published,archived",
+            "related_fields" => "nullable|array",
+            "related_fields.*" => "string|max:255",
+            //"pdf" => "required|file|mimes:pdf|max:10240",
+            "github_link" => "nullable|string|max:255",
+            //"project" => "required|file|mimes:zip|max:10240",
         ]);
+        //Todos os comentários nessa seção foram feitos para que o post de projetos
+        // fosse feito sem autenticação,
+        /*
+        $validatedData["link"] = $request
+            ->file("project")
+            ->store("projects/zips");
+        $validatedData["pdf_link"] = $request
+            ->file("pdf")
+            ->store("projects/pdfs");
 
-        $validatedData['link'] = $request->file('project')->store('projects/zips');
-        $validatedData['pdf_link'] = $request->file('pdf')->store('projects/pdfs');
-
-        $validatedData['user_id'] = Auth::user()->id;
+        $validatedData["user_id"] = Auth::user()->id; */
         $project = $projectService->createProject($validatedData);
 
-        $project->load('user');
+        $project->load("user");
 
-        return response()->json([
-            'success' => true,
-            'data' => new ProjectResource($project),
-        ], 201);
+        return response()->json(
+            [
+                "success" => true,
+                "data" => new ProjectResource($project),
+            ],
+            201,
+        );
     }
 
     /**
@@ -67,15 +77,18 @@ class ProjectController extends Controller
         $project = $projectService->getProjectBySlug($slug);
 
         if (!$project) {
-            return response()->json([
-                'success' => false,
-                'message' => 'Project not found',
-            ], 404);
+            return response()->json(
+                [
+                    "success" => false,
+                    "message" => "Project not found",
+                ],
+                404,
+            );
         }
 
         return response()->json([
-            'success' => true,
-            'data' => $project,
+            "success" => true,
+            "data" => $project,
         ]);
     }
 
@@ -84,10 +97,13 @@ class ProjectController extends Controller
      */
     public function update(Request $request, int $id)
     {
-        return response()->json([
-            'success' => false,
-            'message' => 'Not implemented yet',
-        ], 501);
+        return response()->json(
+            [
+                "success" => false,
+                "message" => "Not implemented yet",
+            ],
+            501,
+        );
     }
 
     /**
@@ -97,26 +113,26 @@ class ProjectController extends Controller
     {
         $project = $projectService->getUserProjectById(Auth::user()->id, $id);
 
-        if ($project)
-        {
+        if ($project) {
             $projectService->deleteProject($project);
         }
 
         return response()->json([
-            'success' => true,
-            'message' => 'Project deleted successfully',
+            "success" => true,
+            "message" => "Project deleted successfully",
         ]);
     }
 
     /**
      * Realiza a busca de projetos
      */
-    public function search(Request $request, ProjectService $projectService) {
+    public function search(Request $request, ProjectService $projectService)
+    {
         $request->validate([
-            'query' => 'required|string|min:3', // Pra pesquisar somente se houverem pelo menos 3 caracteres inseridos.
+            "query" => "required|string|min:3", // Pra pesquisar somente se houverem pelo menos 3 caracteres inseridos.
         ]);
 
-        $query = $request->has('query') ? $request->input('query') : null;
+        $query = $request->has("query") ? $request->input("query") : null;
 
         $projects = $projectService->getAllProjects(search: $query);
 
