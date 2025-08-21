@@ -51,6 +51,10 @@ class ProjectService
         $project->status = $data["status"];
         //$project->pdf_link = $data['pdf_link'];
         $project->github_link = $data["github_link"];
+        $project->keywords = $data["keywords"];
+        $project->co_authors = $data["co_authors"];
+        $project->author = $data["author"];
+        $project->type = $data["type"];
 
         $project->save();
 

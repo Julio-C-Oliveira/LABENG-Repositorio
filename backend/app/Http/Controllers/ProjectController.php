@@ -37,6 +37,7 @@ class ProjectController extends Controller
             "title" => "required|string|max:255",
             "description" => "required|string",
             "type" => "required|in:Article,TCC",
+            "author" => "required|string|max:255",
             "co_authors" => "required|string|max:255",
             "status" => "required|in:draft,published,archived",
             "related_fields" => "nullable|array",
@@ -44,6 +45,7 @@ class ProjectController extends Controller
             //"pdf" => "required|file|mimes:pdf|max:10240",
             "github_link" => "nullable|string|max:255",
             //"project" => "required|file|mimes:zip|max:10240",
+            "keywords" => "required|string|max:255",
         ]);
         //Todos os comentários nessa seção foram feitos para que o post de projetos
         // fosse feito sem autenticação,
@@ -58,7 +60,7 @@ class ProjectController extends Controller
         $validatedData["user_id"] = Auth::user()->id; */
         $project = $projectService->createProject($validatedData);
 
-        $project->load("user");
+        //$project->load("user");
 
         return response()->json(
             [

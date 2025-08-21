@@ -63,6 +63,7 @@ export function SendProject() {
           keywords: listKeyWords.join(", "),
           co_authors: coAutorList.join(", "),
           type: "TCC",
+          author: autor,
           // O campo "project" do seu código original provavelmente se refere ao "zip_url" ou similar
           // Se for um arquivo zip, considere usar "zip_url" ou outro nome correspondente
         }),
