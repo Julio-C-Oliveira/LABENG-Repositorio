@@ -101,7 +101,7 @@ export function Results() {
 
       <ul className={styles.results_table}>
         {results.data.length > 1 ? (
-          results.map((result: any, i: number) => (
+          results.data.map((result: any, i: number) => (
             <li key={`result-${i}`}>
               <button
                 className={styles.card}

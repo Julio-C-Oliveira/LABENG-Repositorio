@@ -71,7 +71,7 @@ export function Home() {
       if (results.data.length === 1) {
         console.log(results.title);
       } else {
-        results.forEach((projeto: { title: string }) => {
+        results.data.forEach((projeto: { title: string }) => {
           console.log(projeto.title);
         });
       }
