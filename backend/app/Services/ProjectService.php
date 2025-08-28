@@ -18,7 +18,7 @@ class ProjectService
     public function getAllProjects(
         int $perPage = 10,
         int $page = 1,
-        string $search = null,
+        ?string $search,
     ) {
         /*
         return Project::with(["user"])
@@ -48,24 +48,26 @@ class ProjectService
 
     public function createProject(array $data)
     {
-        //Os comentários nessa função foi feito para evitar com o uso de autenticação
-        //Caso n usar mais pode descomentar
         $project = new Project();
 
         $project->title = $data["title"];
         $project->slug = Str::slug($data["title"]) . "-" . uniqid();
         $project->description = $data["description"];
-        //$project->link = $data["link"];
-        //$project->user_id = $data["user_id"];
+        $project->zip_url = $data["link"];
         $project->status = $data["status"];
-        //$project->pdf_link = $data['pdf_link'];
-        $project->github_link = $data["github_link"];
+        $project->pdf_url = $data['pdf_link'];
+        $project->github_link = $data["github_link"] ?? '';
         $project->keywords = $data["keywords"];
         $project->co_authors = $data["co_authors"];
         $project->author = $data["author"];
         $project->type = $data["type"];
+        $project->published_at = $data["published_at"];
 
         $project->save();
+
+        $project->users()->attach($data['user_id'], [
+            'role' => 'admin'
+        ]);
 
         return $project;
     }

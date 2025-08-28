@@ -5,7 +5,7 @@ import styles from "./Login.module.css";
 import googleIcon from "/imgs/google-icon.png";
 
 export interface LoginFormProps {
-    handleSubmit: (mail: string, password: string) => Promise<void>;
+    handleSubmit: (mail: string, password: string) => void;
 }
 
 export const LoginForm: React.FC<LoginFormProps> = ({ handleSubmit }) => {

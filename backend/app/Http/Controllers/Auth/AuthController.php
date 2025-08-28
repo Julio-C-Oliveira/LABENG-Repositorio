@@ -18,7 +18,7 @@ class AuthController extends Controller
 {
     public function __construct()
     {
-        $this->middleware("auth:api", ["except" => ["login", "signup"]]);
+        // $this->middleware("auth:api", ["except" => ["login", "signup"]]);
     }
 
     public function me()
@@ -44,7 +44,7 @@ class AuthController extends Controller
             [
                 "status" => "success",
                 "message" => "User Registered Successfully",
-                "user" => $user,
+                "user" => new UserResource($user),
                 "token" => $token,
             ],
             201,
@@ -52,31 +52,12 @@ class AuthController extends Controller
     }
 
     public function login(
-        LoginRequest $request /*
-    UserService $userService,
-    AuthHelper $authHelper,
-     */,
+        LoginRequest $request,
+        UserService $userService,
+        AuthHelper $authHelper
     ) {
         $data = $request->validated();
-        $token = Auth::attempt($data);
 
-        if (!$token) {
-            return response()->json(
-                [
-                    "status" => "error",
-                    "message" => "unauthorized",
-                ],
-                401,
-            );
-        }
-
-        $user = Auth::user();
-        return response()->json([
-            "status" => "success",
-            "user" => $user,
-            "token" => $token,
-        ]);
-        /*
         $user = $userService->findUserByEmail($data["email"]);
         if (!$authHelper->isCorrectPassword($user, $data["password"])) {
             return response()->json(["message" => "Invalid credentials"], 401);
@@ -90,6 +71,6 @@ class AuthController extends Controller
                 "token" => $token,
             ],
             200,
-        ); */
+        );
     }
 }

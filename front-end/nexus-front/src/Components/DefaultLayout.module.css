@@ -73,6 +73,15 @@
   min-height: 100vh;
 }
 
+.loginBttn{
+  background-color: var(--color-main-0);
+  padding: .8rem 1.5rem;
+  border-radius: 1rem;
+  color: var(--color-main-2);
+  font-size: var(--font-size-2x);
+  font-weight: 600;
+}
+
 @media (min-width: 768px){
   .header_wrapper .send_project_bttn{
     padding: .6rem 1.5rem;

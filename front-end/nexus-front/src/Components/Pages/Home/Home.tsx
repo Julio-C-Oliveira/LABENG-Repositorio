@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router";
 
 import styles from "./Home.module.css";
 
-import { MagnifyingGlassIcon, CodeIcon } from "@phosphor-icons/react";
+import { CodeIcon, MagnifyingGlassIcon } from "@phosphor-icons/react";
 
 export function Home() {
   const [searchText, setSearchText] = useState("");
@@ -76,8 +76,7 @@ export function Home() {
         });
       }
 
-      console.log("Enviando para /inicio/resultados com:", results);
-      navigate("/inicio/resultados", { state: { results } });
+      navigate("/resultados", { state: { results } });
     } catch (error) {
       console.error("Erro na busca:", error);
     }

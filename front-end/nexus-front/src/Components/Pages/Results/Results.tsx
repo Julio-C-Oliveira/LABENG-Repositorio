@@ -1,14 +1,12 @@
 import { useState, type CSSProperties } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import styles from "./Results.module.css";
 
 import { FunnelIcon, MagnifyingGlassIcon } from "@phosphor-icons/react";
 
-import userImg from "/imgs/user-img.png";
 
 import projectImg1 from "/imgs/project-image-1.png";
-import projectImg2 from "/imgs/project-image-2.png";
 
 export function Results() {
   const location = useLocation();
@@ -23,7 +21,7 @@ export function Results() {
 
   async function handleProject(slug: string) {
     console.log("Results - Slug:", slug);
-    navigate(`/inicio/projeto/${slug}`); // Aqui vai ser a parte de redirecionar pro projeto
+    navigate(`/projeto/${slug}`); // Aqui vai ser a parte de redirecionar pro projeto
   }
 
   async function handleSearch(text: string) {
@@ -66,8 +64,7 @@ export function Results() {
         console.log(projeto.title);
       });
 
-      console.log("Enviando para /inicio/resultados com:", results);
-      navigate("/inicio/resultados", { state: { results } });
+      navigate("/resultados", { state: { results } });
     } catch (error) {
       console.error("Erro na busca:", error);
     }

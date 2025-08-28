@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\CreateProjectRequest;
 use App\Http\Resources\ProjectResource;
+use App\Models\User;
 use App\Services\ProjectService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -16,10 +18,12 @@ class ProjectController extends Controller
     {
         $perPage = request()->input("per_page", 10);
         $page = request()->input("page", 1);
+        $query = request()->input('query', null);
 
         $projects = $projectService->getAllProjects(
             perPage: $perPage,
             page: $page,
+            search: $query
         );
 
         return response()->json([
@@ -31,25 +35,10 @@ class ProjectController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request, ProjectService $projectService)
+    public function store(CreateProjectRequest $request, ProjectService $projectService)
     {
-        $validatedData = $request->validate([
-            "title" => "required|string|max:255",
-            "description" => "required|string",
-            "type" => "required|in:Article,TCC",
-            "author" => "required|string|max:255",
-            "co_authors" => "required|string|max:255",
-            "status" => "required|in:draft,published,archived",
-            "related_fields" => "nullable|array",
-            "related_fields.*" => "string|max:255",
-            //"pdf" => "required|file|mimes:pdf|max:10240",
-            "github_link" => "nullable|string|max:255",
-            //"project" => "required|file|mimes:zip|max:10240",
-            "keywords" => "required|string|max:255",
-        ]);
-        //Todos os comentários nessa seção foram feitos para que o post de projetos
-        // fosse feito sem autenticação,
-        /*
+        $validatedData = $request->validated();
+
         $validatedData["link"] = $request
             ->file("project")
             ->store("projects/zips");
@@ -57,10 +46,11 @@ class ProjectController extends Controller
             ->file("pdf")
             ->store("projects/pdfs");
 
-        $validatedData["user_id"] = Auth::user()->id; */
+        $validatedData["user_id"] = Auth::user()->user_id;
+
         $project = $projectService->createProject($validatedData);
 
-        //$project->load("user");
+        $project->load("users");
 
         return response()->json(
             [

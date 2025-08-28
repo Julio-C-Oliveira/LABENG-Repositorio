@@ -26,20 +26,13 @@ Route::prefix("projects")->group(function () {
     ])->name("projects.show");
 
     // Vou colocar a busca aqui
+    //! Remover depois
     Route::post("/search", [
         \App\Http\Controllers\ProjectController::class,
         "search",
     ])->name("projects.search");
 });
-/* essa rota está porque o Mário n conseguiu usar o envio de projetos com autenticação pode tirar se quiser
- de preferência comentar*/
-Route::prefix("projects")->group(function () {
-    Route::post("/", [
-        \App\Http\Controllers\ProjectController::class,
-        "store",
-    ])->name("projects.store");
-    // ... outras rotas
-});
+
 // Authenticated API routes
 Route::middleware("auth:sanctum")->group(function () {
     // Auth routes
@@ -50,7 +43,7 @@ Route::middleware("auth:sanctum")->group(function () {
         ])->name("auth.hello");
     });
 
-    Route::prefix("projects", function () {
+    Route::prefix("projects")->group(function () {
         /*  Route::post("/", [
             \App\Http\Controllers\ProjectController::class,
             "store",
@@ -63,6 +56,12 @@ Route::middleware("auth:sanctum")->group(function () {
             \App\Http\Controllers\ProjectController::class,
             "destroy",
         ])->name("projects.destroy");
+
+
+        Route::post("/", [
+            \App\Http\Controllers\ProjectController::class,
+            "store",
+        ])->name("projects.store");
     });
 });
 

@@ -1,33 +1,53 @@
-import { useNavigate } from "react-router";
 import { useState } from "react";
+import { useNavigate } from "react-router";
 import styles from "./SendProject.module.css";
 
 import {
-  CodeIcon,
-  FilePdfIcon,
-  ArrowBendDownLeftIcon,
+    ArrowBendDownLeftIcon,
+    CodeIcon,
+    FilePdfIcon,
 } from "@phosphor-icons/react";
 
 //import authorImg from "/imgs/user-img.png";
 //import teacherImg from "/imgs/persona-img-2.png";
+import React from "react";
+import Swal from "sweetalert2";
+import { api } from "../../../services/api";
 import githubLogo from "/imgs/github-icon.png";
 
 export function SendProject() {
   const navigate = useNavigate();
-  const [titulo, setTitulo] = useState<string>("");
-  const [pdf, setPdf] = useState<File | null>(null);
-  //const [codigo, setCodigo] = useState<File | null>(null);
-  const [projectLink, setProjectLink] = useState<string>("");
-  const [github, setGithub] = useState<string | null>("");
-  const [descricao, setDescricao] = useState<string>("");
-  //const [data, setData] = useState<string>("");
-  const [status, setStatus] = useState<string>("");
+
+  const titleRef = React.useRef<HTMLInputElement>(null);
+  const pdfRef = React.useRef<HTMLInputElement>(null);
+  const codeRef = React.useRef<HTMLInputElement>(null);
+  const githubRef = React.useRef<HTMLInputElement>(null);
+  const descriptionRef = React.useRef<HTMLTextAreaElement>(null);
+  const dateRef = React.useRef<HTMLInputElement>(null);
+  const statusRef = React.useRef<HTMLSelectElement>(null);
+  const autorRef = React.useRef<HTMLInputElement>(null);
+  const selectedValueRef = React.useRef<HTMLSelectElement>(null);
+  const relatedAreasRef = React.useRef<HTMLSelectElement>(null);
+
   const [keyWord, setKeyWord] = useState<string>("");
   const [listKeyWords, setListKeyWords] = useState<Array<string>>([]);
   const [coAutor, setCoAutor] = useState<string>("");
   const [coAutorList, setCoAutorList] = useState<Array<string>>([]);
-  const [autor, setAutor] = useState<string>("");
-  //const [selectedValue, setSelectedValue] = useState<string>("");
+
+  const resetFields = () => {
+    titleRef.current!.value = "";
+    descriptionRef.current!.value = "";
+    statusRef.current!.value = "";
+    pdfRef.current!.value = "";
+    githubRef.current!.value = "";
+    relatedAreasRef.current!.value = "";
+    codeRef.current!.value = "";
+    dateRef.current!.value = "";
+    autorRef.current!.value = "";
+    selectedValueRef.current!.value = "";
+    setListKeyWords([]);
+    setCoAutorList([]);
+  };
 
   const addKeyWords = (e: any) => {
     e.preventDefault();
@@ -43,57 +63,46 @@ export function SendProject() {
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
+
+    const form = new FormData();
+    form.set("title", titleRef.current!.value);
+    form.set("description", descriptionRef.current!.value);
+    form.set("type", selectedValueRef.current!.value);
+    form.set("author", autorRef.current!.value);
+    form.set("co_authors", coAutorList.join(", "));
+    form.set("status", statusRef.current!.value);
+    form.set("related_fields[0]", relatedAreasRef.current!.value);
+    if (pdfRef.current!.files && pdfRef.current!.files[0]) {
+      form.set("pdf", pdfRef.current!.files[0]);
+    }
+    form.set("github_link", githubRef.current!.value);
+    if (codeRef.current!.files && codeRef.current!.files[0]) {
+      form.set("project", codeRef.current!.files[0]);
+    }
+    form.set("keywords", listKeyWords.join(", "));
+    form.set("published_at", dateRef.current!.value);
+
     try {
-      const response = await fetch(`http://localhost:8000/api/projects/`, {
-        method: "POST",
+      const response = await api.post(`/projects`, form, {
         headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
+          "Content-Type": "multipart/form-data",
         },
-        body: JSON.stringify({
-          title: titulo,
-          description: descricao,
-          // Adicionar este campo que é esperado pelo backend
-          project: projectLink,
-          user_id: 1, // Este campo é OBRIGATÓRIO pelo backend
-          status: status,
-          pdf_link: pdf, // Mudar de "pdf" para "pdf_link" (como está no backend)
-          github_link: github,
-          // Campos adicionais que você quer enviar (o backend pode ignorar se não existirem)
-          keywords: listKeyWords.join(", "),
-          co_authors: coAutorList.join(", "),
-          type: "TCC",
-          author: autor,
-          // O campo "project" do seu código original provavelmente se refere ao "zip_url" ou similar
-          // Se for um arquivo zip, considere usar "zip_url" ou outro nome correspondente
-        }),
       });
 
-      if (response.ok) {
-        console.log("projeto enviado com sucesso");
-        // Limpar os estados após sucesso
-        setTitulo("");
-        setDescricao("");
-        setStatus("");
-        setPdf(null);
-        setGithub("");
-        setProjectLink(""); // Limpar este campo também
-        setListKeyWords([]);
-        setCoAutorList([]);
-        // navigate('/success-page');
-      } else {
-        const errorData = await response.json();
-        console.error("Erro do servidor:", errorData);
-        throw new Error(errorData.message || "Erro ao enviar projeto");
+      if (response.status === 201) {
+        Swal.fire({
+          title: "Sucesso!",
+          text: "Projeto enviado com sucesso.",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+        resetFields();
       }
     } catch (err) {
       console.error(err);
     }
   };
   const handleChange = (e: any) => {
-    if (e.target.name === "autor") {
-      setAutor(e.target.value);
-    }
     if (e.target.name === "keywords") {
       setKeyWord((prev) => prev.concat(e.target.value));
     }
@@ -101,57 +110,7 @@ export function SendProject() {
       setCoAutor((prev) => prev.concat(e.target.value));
     }
   };
-  function DropdownAutores() {
-    const handleChangeDropDown = (e: any) => {
-      setAutor(e.target.value);
-    };
-    return (
-      <div>
-        <label>
-          <select
-            name="pets"
-            multiple
-            size="4"
-            value=""
-            onChange={(e: any) => handleChangeDropDown(e)}
-          >
-            <optgroup>
-              <option value="Autor 1">Autor 1</option>
-              <option value="Autor 2">Autor 2</option>
-              <option value="Autor 3">Autor 3</option>
-              <option value="Autor N">Autor N</option>
-            </optgroup>
-          </select>
-        </label>
-      </div>
-    );
-  }
 
-  function DropdownCoAutores() {
-    const handleChangeDropDown = (e: any) => {
-      setCoAutor(e.target.value);
-    };
-    return (
-      <div>
-        <label>
-          <select
-            name="pets"
-            multiple
-            size="4"
-            value=""
-            onChange={(e: any) => handleChangeDropDown(e)}
-          >
-            <optgroup>
-              <option value="CoAutor 1">CoAutor 1</option>
-              <option value="CoAutor 2">CoAutor 2</option>
-              <option value="CoAutor 3">CoAutor 3</option>
-              <option value="CoAutor N">CoAutor N</option>
-            </optgroup>
-          </select>
-        </label>
-      </div>
-    );
-  }
 
   return (
     <div className={styles.container}>
@@ -167,14 +126,23 @@ export function SendProject() {
           <div className={styles.formGroup}>
             <label htmlFor="name">Nome*</label>
             <input
-              value={titulo}
               type="text"
               id="name"
               name="name"
               placeholder="Nome do projeto"
-              onChange={(e) => setTitulo(e.target.value)}
               required
+              ref={titleRef}
             />
+          </div>
+
+          {/* Tipo */}
+          <div className={styles.formGroup}>
+            <label htmlFor="type">Tipo*</label>
+            <select id="type" name="type" ref={selectedValueRef} required>
+              <option value="">Selecione um tipo</option>
+              <option value="TCC">TCC</option>
+              <option value="Article">Article</option>
+            </select>
           </div>
 
           {/* Descrição */}
@@ -183,10 +151,9 @@ export function SendProject() {
             <textarea
               id="description"
               name="description"
-              value={descricao}
-              onChange={(e) => setDescricao(e.target.value)}
               placeholder="Descreva seu projeto..."
-              rows="4"
+              rows={4}
+              ref={descriptionRef}
               required
             />
           </div>
@@ -224,11 +191,9 @@ export function SendProject() {
               id="autor"
               name="autor"
               placeholder="Nome do autor"
-              value={autor}
-              onChange={(e: any) => handleChange(e)}
+            ref={autorRef}
               required
             />
-            {autor != "" && <DropdownAutores />}
           </div>
 
           {/* Co-autores */}
@@ -246,7 +211,6 @@ export function SendProject() {
               <button type="button" onClick={(e) => addCoAutor(e)}>
                 +
               </button>
-              {coAutor != "" && <DropdownCoAutores />}
               {coAutorList.length > 0 && (
                 <div>
                   {coAutorList.map((coAutor: string) => (
@@ -264,7 +228,7 @@ export function SendProject() {
               type="date"
               id="publicationDate"
               name="publicationDate"
-              onChange={(e) => setData(e.target.value)}
+              ref={dateRef}
               required
             />
           </div>
@@ -273,27 +237,22 @@ export function SendProject() {
           <div className={styles.formGroup}>
             <label htmlFor="status">Situação*</label>
             <select
-              onChange={(e) => {
-                if (e.target.value === "Em andamento") {
-                  setStatus("draft");
-                } else {
-                  setStatus("published");
-                }
-              }}
               id="status"
               name="status"
+              ref={statusRef}
               required
             >
               <option value="">Selecione...</option>
-              <option value="Em andamento">Em andamento</option>
-              <option value="Concluido">Concluído</option>
+              <option value="draft">Em andamento</option>
+              <option value="published">Publicado</option>
+              <option value="archived">Arquivado</option>
             </select>
           </div>
 
           {/* Áreas relacionadas (dropdown) */}
           <div className={styles.formGroup}>
             <label htmlFor="relatedAreas">Áreas relacionadas*</label>
-            <select id="relatedAreas" name="relatedAreas" required>
+            <select id="relatedAreas" name="relatedAreas" required ref={relatedAreasRef}>
               <option value="">Selecione...</option>
               <option value="Inteligência Artificial">
                 Inteligência Artificial
@@ -321,11 +280,11 @@ export function SendProject() {
               Código-fonte (arquivo .zip)
             </label>
             <input
-              type="file"
-              id="sourceCode"
-              name="sourceCode"
-              accept=".zip,.rar,.7z"
-              onChange={(e) => setCodigo(e.target.files[0])}
+                type="file"
+                id="sourceCode"
+                name="sourceCode"
+                accept=".zip,.rar,.7z"
+                ref={codeRef}
             />
           </div>
 
@@ -339,9 +298,8 @@ export function SendProject() {
               type="url"
               id="github"
               name="github"
-              value={github !== null ? github : ""}
-              onChange={(e) => setGithub(e.target.value)}
               placeholder="https://github.com/usuario/projeto"
+              ref={githubRef}
             />
           </div>
 
@@ -356,7 +314,7 @@ export function SendProject() {
               id="pdf"
               name="pdf"
               accept=".pdf"
-              onChange={(e) => setPdf(e.target.files![0])}
+              ref={pdfRef}
             />
           </div>
 

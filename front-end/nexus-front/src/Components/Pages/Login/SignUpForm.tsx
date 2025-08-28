@@ -4,7 +4,7 @@ import { AtIcon, EyeIcon, PasswordIcon, UserIcon } from "@phosphor-icons/react";
 import styles from "./Login.module.css";
 
 export interface SignupFormProps {
-    handleSubmit: (name: string, username: string, mail: string, password: string, password_confirmation: string) => Promise<void>;
+    handleSubmit: (name: string, username: string, mail: string, password: string, password_confirmation: string) => void;
 }
 
 export const SignupForm: React.FC<SignupFormProps> = ({ handleSubmit }) => {

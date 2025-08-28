@@ -2,7 +2,7 @@ import { createContext, useContext, } from "react";
 import { Outlet, } from "react-router";
 
 interface GlobalContextInterface{
-
+    children: React.ReactNode;
 };
 
 export const GlobalContextProvider = createContext({} as GlobalContextInterface);
