@@ -5,7 +5,6 @@ import styles from "./Results.module.css";
 
 import { FunnelIcon, MagnifyingGlassIcon } from "@phosphor-icons/react";
 
-
 import projectImg1 from "/imgs/project-image-1.png";
 
 export function Results() {
@@ -169,7 +168,7 @@ export function Results() {
                   <img
                     src={author}
                     alt="Imagem de perfil do autor"
-                    key={`author-${i}-${k}`}
+                    key={`author-${k}`}
                   />
                 ))}
               </div>
