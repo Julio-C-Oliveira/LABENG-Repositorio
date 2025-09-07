@@ -37,9 +37,9 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = (pro
     const [user, setUser] = React.useState<IUser | null>(null);
     const [isAuthenticated, setIsAuthenticated] = React.useState<boolean>(false);
 
-    const login = React.useCallback(async (username: string, password: string) => {
+    const login = React.useCallback(async (email: string, password: string) => {
         try {
-            const response = await api.post<{ token: string, user: IUser }>('/auth/login', { username, password });
+            const response = await api.post<{ token: string, user: IUser }>('/auth/login', { email, password });
 
             if (response.status === 200) {
                 const { user, token } = response.data;
