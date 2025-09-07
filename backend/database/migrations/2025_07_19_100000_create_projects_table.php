@@ -18,8 +18,6 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->date('published_at')->nullable();
             $table->string('type');
-            $table->string('pdf_url')->nullable();
-            $table->string('zip_url')->nullable();
             $table->timestamps();
         });
     }
