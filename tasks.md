@@ -16,7 +16,7 @@ Todos os bugs do código devem ser corrigidos.
         - [x] 2025_07_19_130000_create_related_fields_table, na função up, linha 16.
         - [x] 2025_07_19_234533_alter_users_add_name_in_users_table, na função up, linha 11 e, na função down, linha 18.
         - [x] TestSearchSeeder.php, na função run, linha 24.
-- [ ] Login, mesmo com o usuário existindo o login estava retornando erro.
+- [x] Login, mesmo com o usuário existindo o login estava retornando erro.
 - [ ] SigUp, atualmente não está criando o usuário, possível erro no back.
         
 # Dúvidas
