@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::table('projects', function (Blueprint $table) {
             $table->string('status')->default('draft')->after('type'); // status of the project: draft, published, archived
             $table->string('related_fields')->nullable()->after('status');
-            $table->string('pdf_link')->nullable()->after('related_fields');
-            $table->string('github_link')->nullable()->after('pdf_link');
+            $table->string('pdf_url')->nullable()->after('related_fields');
+            $table->string('github_url')->nullable()->after('pdf_url');
+            $table->string('zip_url')->nullable()->after('github_url');
         });
     }
 
@@ -24,6 +25,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::table("projects", function (Blueprint $table) {
+            $table->dropColumn(["status", "related_fields", "pdf_url", "github_url", "zip_url"]);
+        });
     }
 };
