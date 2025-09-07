@@ -14,8 +14,8 @@ export function Login() {
   const { login, signup } = useAuth();
 
   const [changeForm, setChangeForm] = useState<boolean>(true);
-    const handleLogin = React.useCallback((mail: string, password: string) => {
-        login(mail, password);
+    const handleLogin = React.useCallback((email: string, password: string) => {
+        login(email, password);
     }, [login]);
 
     const handleSignUp = React.useCallback((name: string, username: string, mail: string, password: string, password_confirmation: string,) => {
