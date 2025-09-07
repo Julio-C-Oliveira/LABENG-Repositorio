@@ -21,7 +21,6 @@ class TestSearchSeeder extends Seeder
     {
         // Garante pelo menos um usuário para associar os projetos
         $user = User::first() ?? User::factory()->create([
-            'name' => 'name_seed',
             'username' => 'usuario_seed',
             'email' => 'seed@example.com',
             'password' => bcrypt('password123'),
@@ -48,15 +47,18 @@ class TestSearchSeeder extends Seeder
         foreach ($projects as $proj) {
             $project = Project::create([
                 'title'        => $proj['title'],
-                'slug'         => Str::slug($proj['title']).'-'.Str::random(4),
+                'slug'         => Str::slug($proj['title']) . '-' . Str::random(4),
                 'description'  => fake()->paragraph(3),
                 'published_at' => Carbon::now()->subDays(rand(10, 500)),
                 'type'         => $proj['type'],
                 'pdf_url'      => null,
                 'zip_url'      => null,
+                'keywords'     => 'exemplo, teste',       // exemplo de keywords
+                'co_authors'   => 'Coautor 1, Coautor 2', // exemplo de coautores
+                'author'       => $user->username,
             ]);
 
-            // Associa usuário ao projeto (via tabela pivot)
+            // Associa usuário ao projeto (via pivot)
             $project->users()->attach($user->user_id, [
                 'role' => 'owner',
                 'created_at' => now(),
