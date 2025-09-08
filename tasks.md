@@ -17,10 +17,13 @@ Todos os bugs do código devem ser corrigidos.
         - [x] 2025_07_19_234533_alter_users_add_name_in_users_table, na função up, linha 11 e, na função down, linha 18.
         - [x] TestSearchSeeder.php, na função run, linha 24.
 - [x] Login, mesmo com o usuário existindo o login estava retornando erro.
-- [ ] SigUp, atualmente não está criando o usuário, possível erro no back.
+- [ ] SigUp, os valores estão chegando nas posições erradas no back.
         
 # Dúvidas
 - [ ] É necessário manter related_fields e project_related? Somente uma dúvida mesmo.
 
 # Nomenclatura
 - [ ] github e github_link, pode ser interessante alterar a nomenclatura, github é pro usuário e github_link é para o projeto.
+
+# Comandos
+- `php artisan migrate:fresh --seed`
