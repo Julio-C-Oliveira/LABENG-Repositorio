@@ -19,11 +19,17 @@ class SignUpRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\ValidationRule|array<mixed>|string>
      */
+
     public function rules(): array
     {
+        /*
+        Retirei a validação do e-mail, ela não está funcionando, nem para @gmail.com, nem para @icen.ufpa.br
+        */
+        \Log::info($this->all()); // <-- loga tudo que chega no request
+        
         return [
             "username" => "required|string|max:255|unique:users,username",
-            "email" => "required|string|email|max:255|unique:users,email",
+            "email" => "required|string|max:255|unique:users,email", 
             "password" => "required|string|min:8|confirmed",
         ];
     }
