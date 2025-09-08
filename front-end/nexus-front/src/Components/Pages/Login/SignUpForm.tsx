@@ -4,13 +4,12 @@ import { AtIcon, EyeIcon, PasswordIcon, UserIcon } from "@phosphor-icons/react";
 import styles from "./Login.module.css";
 
 export interface SignupFormProps {
-    handleSubmit: (name: string, username: string, mail: string, password: string, password_confirmation: string) => void;
+    handleSubmit: (username: string, email: string, password: string, password_confirmation: string) => void;
 }
 
 export const SignupForm: React.FC<SignupFormProps> = ({ handleSubmit }) => {
-    const nameInputRef = React.useRef<HTMLInputElement>(null);
     const usernameInputRef = React.useRef<HTMLInputElement>(null);
-    const mailInputRef = React.useRef<HTMLInputElement>(null);
+    const emailInputRef = React.useRef<HTMLInputElement>(null);
     const passwordInputRef = React.useRef<HTMLInputElement>(null);
     const passwordConfirmationInputRef = React.useRef<HTMLInputElement>(null);
 
@@ -21,13 +20,36 @@ export const SignupForm: React.FC<SignupFormProps> = ({ handleSubmit }) => {
     const onSubmit = useCallback((e: React.FormEvent) => {
         e.preventDefault();
 
-        const name = nameInputRef.current?.value || "";
         const username = usernameInputRef.current?.value || "";
-        const mail = mailInputRef.current?.value || "";
+        const email = emailInputRef.current?.value.trim() || "";
         const password = passwordInputRef.current?.value || "";
         const password_confirmation = passwordConfirmationInputRef.current?.value || "";
 
-        handleSubmit(name, username, mail, password, password_confirmation);
+        // Validação simples
+        if (!username || !email || !password || !password_confirmation) {
+            alert("Todos os campos devem ser preenchidos.");
+            return;
+        }
+
+        if (!/\S+@\S+\.\S+/.test(email)) {
+            alert("Digite um email válido.");
+            return;
+        }
+
+        if (password.length < 8) {
+            alert("A senha deve ter pelo menos 8 caracteres.");
+            return;
+        }
+
+        if (password !== password_confirmation) {
+            alert("As senhas não coincidem.");
+            return;
+        }
+
+        const payload = { username, email, password, password_confirmation };
+        console.log("JSON enviado:", payload);
+
+        handleSubmit(username, email, password, password_confirmation);
     }, [handleSubmit]);
 
     const toggleShowPassword = useCallback(() => {
@@ -48,16 +70,6 @@ export const SignupForm: React.FC<SignupFormProps> = ({ handleSubmit }) => {
             <div className={styles.input}>
                 <input
                     type="text"
-                    ref={nameInputRef}
-                    placeholder="Nome e sobrenome"
-                    name="name"
-                    required
-                />
-                <UserIcon />
-            </div>
-            <div className={styles.input}>
-                <input
-                    type="text"
                     ref={usernameInputRef}
                     placeholder="Nome de usuário"
                     name="username"
@@ -68,7 +80,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({ handleSubmit }) => {
             <div className={styles.input}>
                 <input
                     type="text"
-                    ref={mailInputRef}
+                    ref={emailInputRef}
                     placeholder="Email institucional"
                     name="email"
                     required
