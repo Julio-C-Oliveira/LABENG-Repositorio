@@ -11,7 +11,6 @@ interface IUser {
 }
 
 interface SignupData {
-        name: string,
         username: string,
         email: string,
         password: string,
@@ -22,7 +21,7 @@ export interface IAuthContext
 {
     user: IUser | null;
     isAuthenticated: boolean;
-    login: (username: string, password: string) => Promise<void>;
+    login: (email: string, password: string) => Promise<void>;
     signup: (data: SignupData) => Promise<void>;
     logout: () => Promise<void>;
 }
@@ -73,6 +72,9 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = (pro
     const signup = React.useCallback(async (data: SignupData) => {
         try {
             const response = await api.post<{ user: IUser, token: string }>('/auth/signup', data);
+
+            console.log("SignUP: ", response)
+
             if (response.status === 201) {
                 setUser(response.data.user);
                 setIsAuthenticated(true);
@@ -86,12 +88,24 @@ export const AuthContextProvider: React.FC<{ children: React.ReactNode }> = (pro
                     navigate("/");
                 });
             }
-        } catch (error) {
-            Swal.fire({
-                icon: "error",
-                title: "Signup Failed",
-                text: "An error occurred during signup.",
-            });
+        } catch (error: any) {
+            // Aqui você pega a resposta do Laravel
+            if (error.response) {
+                console.log("Erro de validação:", error.response.data);
+                
+                Swal.fire({
+                    icon: "error",
+                    title: "Signup Failed",
+                    html: Object.values(error.response.data.errors || {}).flat().join("<br />"),
+                });
+            } else {
+                console.error(error);
+                Swal.fire({
+                    icon: "error",
+                    title: "Signup Failed",
+                    text: "An error occurred during signup.",
+                });
+            }
         }
     }, []);
 
