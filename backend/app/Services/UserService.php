@@ -15,7 +15,6 @@ class UserService extends Authenticatable
     public function createUser(array $data): User
     {
         $user = new User();
-        $user->name = $data["name"];
         $user->username = $data["username"];
         $user->email = $data["email"];
         $user->password = Hash::make($data["password"]);
@@ -31,8 +30,8 @@ class UserService extends Authenticatable
 
     public function updateUser(User $user, array $data): User
     {
-        if (isset($data["name"])) {
-            $user->name = $data["name"];
+        if (isset($data["username"])) {
+            $user->username = $data["username"];
         }
         if (isset($data["email"])) {
             $user->email = $data["email"];
