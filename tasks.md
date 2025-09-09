@@ -17,7 +17,8 @@ Todos os bugs do código devem ser corrigidos.
         - [x] 2025_07_19_234533_alter_users_add_name_in_users_table, na função up, linha 11 e, na função down, linha 18.
         - [x] TestSearchSeeder.php, na função run, linha 24.
 - [x] Login, mesmo com o usuário existindo o login estava retornando erro.
-- [ ] SigUp, os valores estão chegando nas posições erradas no back.
+- [x] SigUp, os valores estão chegando nas posições erradas no back.
+- [ ] Search, está quebrado, devido ao formato de retorno.
         
 # Dúvidas
 - [ ] É necessário manter related_fields e project_related? Somente uma dúvida mesmo.
