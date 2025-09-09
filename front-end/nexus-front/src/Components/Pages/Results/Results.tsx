@@ -57,13 +57,23 @@ export function Results() {
         throw new Error(`Erro HTTP: ${response.status}`);
       }
 
-      const results = await response.json();
-      console.log(results);
-      results.forEach((projeto: { title: string }) => {
-        console.log(projeto.title);
-      });
+      // Dar uma olhada na função original que eu fiz, e analisar como estava feito.
 
-      navigate("/resultados", { state: { results } });
+      const results = await response.json();
+      const data = Array.isArray(results.data.data) ? results.data.data : [];
+
+      if (data.length === 0) {
+        alert("Nenhum projeto encontrado.");
+        return;
+      } else if (data.length === 1) {
+        console.log(data[0].title);
+      } else {
+        data.forEach((projeto: { title: string }) => {
+          console.log(projeto.title);
+        });
+      }
+
+      navigate("/resultados", { state: { results: { data } } });
     } catch (error) {
       console.error("Erro na busca:", error);
     }

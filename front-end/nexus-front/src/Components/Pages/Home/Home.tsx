@@ -69,11 +69,10 @@ export function Home() {
       const results = await response.json();
       const data = Array.isArray(results.data.data) ? results.data.data : [];
 
-      console.log("AQUI PORRA:")
-      console.log(results);
-      console.log(data)
-
-      if (data.length === 1) {
+      if (data.length === 0) {
+        alert("Nenhum projeto encontrado.");
+        return;
+      } else if (data.length === 1) {
         console.log(data[0].title);
       } else {
         data.forEach((projeto: { title: string }) => {
