@@ -18,9 +18,8 @@ export function Login() {
         login(email, password);
     }, [login]);
 
-    const handleSignUp = React.useCallback((name: string, username: string, mail: string, password: string, password_confirmation: string,) => {
+    const handleSignUp = React.useCallback((username: string, mail: string, password: string, password_confirmation: string,) => {
         signup({
-            name: name,
             username: username,
             email: mail,
             password: password,
