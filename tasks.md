@@ -18,8 +18,15 @@ Todos os bugs do código devem ser corrigidos.
         - [x] TestSearchSeeder.php, na função run, linha 24.
 - [x] Login, mesmo com o usuário existindo o login estava retornando erro.
 - [x] SigUp, os valores estão chegando nas posições erradas no back.
-- [ ] Search, está quebrado, devido ao formato de retorno.
-        
+- [x] Search, está quebrado, devido ao formato de retorno, e ao não encontrar projetos.
+- [x] Envio de Projetos está quebrado:
+    - [x] A seção de palavras chave não permite a remoção de letras, e adiciona duplicadas.
+    - [x] A seção de co-autores não permite a remoção de letras, e adiciona duplicadas.
+    - [x] Erro ao enviar o projeto, 422.
+
+# Páginas
+- [ ] A página project exibe pontos que não existem no back, e não exibe alguns que tem no back.
+
 # Dúvidas
 - [ ] É necessário manter related_fields e project_related? Somente uma dúvida mesmo.
 
