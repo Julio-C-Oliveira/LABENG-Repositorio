@@ -64,19 +64,24 @@ export function Home() {
         throw new Error(`Erro HTTP: ${response.status}`);
       }
 
+      // Dar uma olhada na função original que eu fiz, e analisar como estava feito.
+
       const results = await response.json();
+      const data = Array.isArray(results.data.data) ? results.data.data : [];
 
+      console.log("AQUI PORRA:")
       console.log(results);
+      console.log(data)
 
-      if (results.data.length === 1) {
-        console.log(results.title);
+      if (data.length === 1) {
+        console.log(data[0].title);
       } else {
-        results.data.forEach((projeto: { title: string }) => {
+        data.forEach((projeto: { title: string }) => {
           console.log(projeto.title);
         });
       }
 
-      navigate("/resultados", { state: { results } });
+      navigate("/resultados", { state: { results: { data } } });
     } catch (error) {
       console.error("Erro na busca:", error);
     }
