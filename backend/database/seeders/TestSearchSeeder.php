@@ -6,6 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\Project;
 use App\Models\User;
+use App\Models\RelatedField;
 
 use Illuminate\Support\Str;
 use Carbon\Carbon;
@@ -44,6 +45,8 @@ class TestSearchSeeder extends Seeder
             ['title' => 'Desenvolvimento de API para Serviços de Saúde', 'type' => 'Article'],
         ];
 
+        $relatedFields = RelatedField::all();
+
         foreach ($projects as $proj) {
             $project = Project::create([
                 'title'        => $proj['title'],
@@ -64,6 +67,16 @@ class TestSearchSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
+
+            $assignedFields = $relatedFields->random(rand(1, 2));
+
+            // Garante que seja sempre uma Collection
+            if ($assignedFields instanceof RelatedField) {
+                $assignedFields = collect([$assignedFields]);
+            }
+
+            // Associa as áreas ao projeto
+            $project->relatedFields()->attach($assignedFields->pluck('related_id'));
         }
     }
 }

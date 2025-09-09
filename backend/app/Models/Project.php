@@ -25,6 +25,8 @@ class Project extends Model
         "type",
         "pdf_url",
         "zip_url",
+        "github_url",
+        "status",
     ];
 
     public function users()
@@ -37,5 +39,15 @@ class Project extends Model
         )
             ->withPivot("role")
             ->withTimestamps();
+    }
+
+    public function relatedFields()
+    {
+        return $this->belongsToMany(
+            RelatedField::class,
+            "project_related",
+            "project_id",
+            "related_id"
+        );
     }
 }

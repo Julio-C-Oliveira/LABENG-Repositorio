@@ -8,6 +8,22 @@ import authorImg from "/imgs/user-img.png";
 import teacherImg from "/imgs/persona-img-2.png";
 import githubLogo from "/imgs/github-icon.png";
 
+interface ProjectData {
+  title: string;
+  description: string;
+  type: string;
+  status: string;
+  published_at: string;
+  zip_url?: string;
+  pdf_url?: string;
+  github_url?: string;
+  author: string;
+  co_authors?: string;
+  related_fields?: string[];
+}
+
+type ProjectState = { data: ProjectData } | null;
+
 export function Project() {
   const { slug } = useParams();
   const [project, setProject] = useState<any>(null);
@@ -23,6 +39,9 @@ export function Project() {
           throw new Error("Erro ao buscar projeto");
         }
         const data = await response.json();
+
+        console.log("Dados recebidos do backend:", data);
+
         setProject(data);
       } catch (err) {
         console.error(err);
@@ -43,15 +62,16 @@ export function Project() {
       <section className={styles.project_section}>
         <div className={styles.wrapper}>
           <ul className={styles.tags}>
-            <li>Palavra-chave 1</li>
-            <li>Palavra-chave 2</li>
-            <li>Palavra-chave 3</li>
+            {project.data.keywords?.split(',').map((keyword: string, idx: number) => (
+              <li key={idx}>{keyword.trim()}</li>
+            ))}
           </ul>
+
           <h1 className={styles.project_title}>{project.data.title}</h1>
           <p className={styles.project_description}>
             {project.data.description}
           </p>
-          <div className={styles.project_highlight}>
+          {/* <div className={styles.project_highlight}>
             <iframe
               src="https://www.youtube.com/embed/01dn67QubYQ?si=p3Q9Gj3p0Sb_LIfY"
               title="YouTube video player"
@@ -60,7 +80,7 @@ export function Project() {
               referrerPolicy="strict-origin-when-cross-origin"
               allowFullScreen
             ></iframe>
-          </div>
+          </div> */}
           <div className={styles.project_team}>
             <div className={styles.team_wrapper}>
               <div className={styles.profile_img}>
@@ -71,9 +91,9 @@ export function Project() {
                   />
                 </button>
               </div>
-              <span>Autor</span>
+              <span>{project.data.author}</span>
             </div>
-            <div className={styles.team_wrapper}>
+            {/* <div className={styles.team_wrapper}>
               <div className={styles.profile_img}>
                 <button type="button">
                   <img
@@ -83,7 +103,17 @@ export function Project() {
                 </button>
               </div>
               <span>Orientador</span>
-            </div>
+            </div> */}
+            {project.data.co_authors && (
+              <div className={styles.team_wrapper}>
+                <div className={styles.profile_img}>
+                  <button type="button">
+                    <img src={teacherImg} alt="Imagem do co-autor" />
+                  </button>
+                </div>
+                <span>{project.data.co_authors}</span>
+              </div>
+            )}
           </div>
           <ul className={styles.project_details}>
             <li className={styles.row}>
@@ -99,29 +129,28 @@ export function Project() {
             <li className={styles.row}>
               <span className={styles.title}>Publicação</span>
               <span className={styles.value}>
-                {new Date(project.published_at).toLocaleDateString("pt-BR")}
+                {new Date(project.data.published_at).toLocaleDateString("pt-BR")}
               </span>
             </li>
             <li className={`${styles.row} ${styles.row_tags}`}>
               <span className={styles.title}>Áreas relacionadas</span>
               <ul className={styles.details_tags}>
-                <li className={styles.tag}>Redes</li>
-                <li className={styles.tag}>Engenharia de Software</li>
-                <li className={styles.tag}>Arquitetura</li>
-                <li className={styles.tag}>IA</li>
-                <li className={styles.tag}>Visão computacional</li>
+                {project.data.related_fields?.map((field: string, idx: number) => (
+                  <li key={idx} className={styles.tag}>{field}</li>
+                ))}
               </ul>
             </li>
           </ul>
           <div className={styles.project_links}>
-            <a className={styles.codigo_fonte} href="{project.zip_url}">
+            <a className={styles.codigo_fonte} href={project.data.zip_url}>
               <CodeIcon /> Código-fonte
             </a>
-            <a className={styles.github} href="#">
+            <a className={styles.github} href={project.data.github_url}>
               <img src={githubLogo} alt="Logo do Github" />
               GitHub
             </a>
-            <a className={styles.pdf_publicacao} href="{project.pdf_url}">
+
+            <a className={styles.pdf_publicacao} href={project.data.pdf_url}>
               <FilePdfIcon /> PDF da publicação
             </a>
           </div>

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\CreateProjectRequest;
 use App\Http\Resources\ProjectResource;
 use App\Models\User;
+use App\Models\RelatedField;
 use App\Services\ProjectService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -63,7 +64,13 @@ class ProjectController extends Controller
 
         $project = $projectService->createProject($validatedData);
 
-        $project->load("users");
+        $relatedNames = $request->input('related_fields', []); // array de nomes enviado pelo front
+        if (!empty($relatedNames)) {
+            $relatedIds = RelatedField::whereIn('name', $relatedNames)->pluck('related_id')->toArray();
+            $project->relatedFields()->sync($relatedIds);
+        }
+
+        $project->load("users", "relatedFields");
 
         return response()->json(
             [
@@ -91,9 +98,14 @@ class ProjectController extends Controller
             );
         }
 
+        $projectData = $project->toArray();
+        $projectData['related_fields'] = $project->relatedFields
+            ->pluck('name')
+            ->toArray();
+
         return response()->json([
             "success" => true,
-            "data" => $project,
+            "data" => $projectData,
         ]);
     }
 

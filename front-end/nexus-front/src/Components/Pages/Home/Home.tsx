@@ -106,7 +106,7 @@ export function Home() {
           }}
         />
       </div>
-      <nav className={styles.nav}>
+      {/* <nav className={styles.nav}>
         <h2 className={styles.nav_title}>Navegue por categorias de projetos</h2>
         <ul>
           {categoriesArr.map((cat) => (
@@ -120,7 +120,7 @@ export function Home() {
             </li>
           ))}
         </ul>
-      </nav>
+      </nav> */}
     </div>
   );
 }

@@ -60,6 +60,20 @@ export function SendProject() {
     setCoAutorList((prev) => [...prev, coAutor]);
     setCoAutor("");
   };
+
+    // ✅ Adicione este estado para related fields
+  const [relatedFieldsSelected, setRelatedFieldsSelected] = useState<string[]>([]);
+
+  // ✅ função para atualizar o estado quando um checkbox mudar
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, checked } = e.target;
+    if (checked) {
+      setRelatedFieldsSelected(prev => [...prev, value]);
+    } else {
+      setRelatedFieldsSelected(prev => prev.filter(v => v !== value));
+    }
+  };
+
   const handleSubmit = async (e: any) => {
     e.preventDefault();
 
@@ -71,7 +85,8 @@ export function SendProject() {
     form.set("author", autorRef.current!.value);
     form.set("co_authors", coAutorList.join(", "));
     form.set("status", statusRef.current!.value);
-    form.set("related_fields[]", relatedAreasRef.current!.value);
+    relatedFieldsSelected.forEach(name => form.append("related_fields[]", name));
+
     if (pdfRef.current!.files && pdfRef.current!.files[0]) {
       form.set("pdf", pdfRef.current!.files[0]);
     }
@@ -250,27 +265,26 @@ export function SendProject() {
           </div>
 
           {/* Áreas relacionadas (dropdown) */}
-          <div className={styles.formGroup}>
-            <label htmlFor="relatedAreas">Áreas relacionadas*</label>
-            <select id="relatedAreas" name="relatedAreas" required ref={relatedAreasRef}>
-              <option value="">Selecione...</option>
-              <option value="Inteligência Artificial">
-                Inteligência Artificial
-              </option>
-              <option value="Ciência de Dados">Ciência de Dados</option>
-              <option value="Desenvolvimento Web">Desenvolvimento Web</option>
-              <option value="Desenvolvimento Mobile">
-                Desenvolvimento Mobile
-              </option>
-              <option value="Segurança da Informação">
-                Segurança da Informação
-              </option>
-              <option value="Redes de Computadores">
-                Redes de Computadores
-              </option>
-              <option value="Sistemas Embarcados">Sistemas Embarcados</option>
-              <option value="Outra">Outra</option>
-            </select>
+          <div className={styles.checkboxGroup}>
+            {[
+              "Inteligência Artificial",
+              "Ciência de Dados",
+              "Desenvolvimento Web",
+              "Desenvolvimento Mobile",
+              "Segurança da Informação",
+              "Redes de Computadores",
+              "Sistemas Embarcados",
+              "Outra",
+            ].map(area => (
+              <label key={area}>
+                <input
+                  type="checkbox"
+                  value={area}
+                  onChange={handleCheckboxChange}
+                />
+                {area}
+              </label>
+            ))}
           </div>
 
           {/* Código-fonte (file upload) */}

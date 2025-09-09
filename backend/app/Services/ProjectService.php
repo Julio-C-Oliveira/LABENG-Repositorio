@@ -40,10 +40,7 @@ class ProjectService
 
     public function getProjectBySlug(string $slug)
     {
-        // return Project::with(["user"])
-        //     ->where("slug", $slug)
-        //     ->first();
-        return Project::where("slug", $slug)->first();
+        return Project::with('relatedFields')->where('slug', $slug)->first();
     }
 
     public function createProject(array $data)
