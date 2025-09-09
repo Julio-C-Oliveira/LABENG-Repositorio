@@ -26,15 +26,16 @@ class CreateProjectRequest extends FormRequest
             "description" => "required|string",
             "type" => "required|in:Article,TCC",
             "author" => "required|string|max:255",
-            "co_authors" => "required|string|max:255",
             "status" => "required|in:draft,published,archived",
+            "keywords" => "required|string|max:255",
+            "published_at" => "required|date",
+
+            "co_authors" => "nullable|string|max:255",
+            "project" => "nullable|file|mimes:zip|max:40960",
+            "pdf" => "nullable|file|mimes:pdf|max:40960",
+            "github_link" => "nullable|string|max:255",
             "related_fields" => "nullable|array",
             "related_fields.*" => "string|max:255",
-            "pdf" => "required|file|mimes:pdf|max:40960",
-            "github_link" => "nullable|string|max:255",
-            "project" => "required|file|mimes:zip|max:40960",
-            "keywords" => "required|string|max:255",
-            "published_at" => "required|date"
         ];
     }
 }

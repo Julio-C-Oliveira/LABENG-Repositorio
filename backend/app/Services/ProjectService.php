@@ -53,12 +53,12 @@ class ProjectService
         $project->title = $data["title"];
         $project->slug = Str::slug($data["title"]) . "-" . uniqid();
         $project->description = $data["description"];
-        $project->zip_url = $data["link"];
+        $project->zip_url = $data["zip_url"] ?? null;  
         $project->status = $data["status"];
-        $project->pdf_url = $data['pdf_link'];
-        $project->github_link = $data["github_link"] ?? '';
+        $project->pdf_url = $data['pdf_url'] ?? null;
+        $project->github_url = $data["github_url"] ?? null;
         $project->keywords = $data["keywords"];
-        $project->co_authors = $data["co_authors"];
+        $project->co_authors = $data["co_authors"] ?? null;
         $project->author = $data["author"];
         $project->type = $data["type"];
         $project->published_at = $data["published_at"];

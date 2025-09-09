@@ -39,14 +39,25 @@ class ProjectController extends Controller
      */
     public function store(CreateProjectRequest $request, ProjectService $projectService)
     {
+        \Log::info('Dados recebidos no store de Project', [
+            'all_input' => $request->all(),
+            'files' => [
+                'project' => $request->file('project'),
+                'pdf' => $request->file('pdf'),
+            ]
+        ]);
+        
         $validatedData = $request->validated();
 
-        $validatedData["link"] = $request
-            ->file("project")
-            ->store("projects/zips");
-        $validatedData["pdf_link"] = $request
-            ->file("pdf")
-            ->store("projects/pdfs");
+        $validatedData['zip_url'] = $request->hasFile('project') 
+            ? $request->file('project')->store('projects/zips') 
+            : null;
+
+        $validatedData['pdf_url'] = $request->hasFile('pdf') 
+            ? $request->file('pdf')->store('projects/pdfs') 
+            : null;
+
+        $validatedData['github_url'] = $request->input('github_link', null);
 
         $validatedData["user_id"] = Auth::user()->user_id;
 
