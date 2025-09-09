@@ -71,7 +71,7 @@ export function SendProject() {
     form.set("author", autorRef.current!.value);
     form.set("co_authors", coAutorList.join(", "));
     form.set("status", statusRef.current!.value);
-    form.set("related_fields[0]", relatedAreasRef.current!.value);
+    form.set("related_fields[]", relatedAreasRef.current!.value);
     if (pdfRef.current!.files && pdfRef.current!.files[0]) {
       form.set("pdf", pdfRef.current!.files[0]);
     }
@@ -104,10 +104,10 @@ export function SendProject() {
   };
   const handleChange = (e: any) => {
     if (e.target.name === "keywords") {
-      setKeyWord((prev) => prev.concat(e.target.value));
+      setKeyWord(e.target.value);
     }
     if (e.target.name === "coautores") {
-      setCoAutor((prev) => prev.concat(e.target.value));
+      setCoAutor(e.target.value);
     }
   };
 
@@ -323,7 +323,6 @@ export function SendProject() {
           </button>
         </form>
       </div>
-      s
     </div>
   );
 }
