@@ -8,6 +8,8 @@ use App\Models\User;
 use App\Services\ProjectService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+
 
 class ProjectController extends Controller
 {
@@ -126,8 +128,27 @@ class ProjectController extends Controller
 
         $query = $request->has("query") ? $request->input("query") : null;
 
-        $projects = $projectService->getAllProjects(search: $query);
+        // Loga o que veio da requisição
+        Log::info('Busca de projetos iniciada', [
+            'query' => $query,
+            'user_id' => $request->user()?->id,
+        ]);
 
-        return response()->json($projects);
+        //$projects = $projectService->getAllProjects(search: $query);
+
+        $projects = $projectService->getAllProjects(
+            perPage: 10, 
+            page: 1,
+            search: $query
+        );
+
+        Log::info('Resultados da busca', [
+            'count' => count($projects),
+        ]);
+
+        return response()->json([
+            "success" => true,
+            "data" => $projects,
+        ]);
     }
 }
