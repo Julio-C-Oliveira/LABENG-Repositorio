@@ -25,6 +25,7 @@ class SignUpRequest extends FormRequest
         /*
         Retirei a validação do e-mail, ela não está funcionando, nem para @gmail.com, nem para @icen.ufpa.br
         */
+        \Log::info('Raw JSON: ' . $this->getContent());
         \Log::info($this->all()); // <-- loga tudo que chega no request
         
         return [
